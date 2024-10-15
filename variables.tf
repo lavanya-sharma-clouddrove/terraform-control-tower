@@ -147,7 +147,7 @@ description = "s3 template file url"
 variable "guardduty_stack_name" {
     description = "Name of the CloudFormation Stack"
   type = string
-  default = ""
+  default = "guardduty-stack"
 }
 variable "guardduty_template_file" {
     description = "URL of the CloudFormation template"
@@ -157,35 +157,30 @@ variable "guardduty_template_file" {
 variable "administration_role_arn" {
     description = "ARN of the administration role for the StackSet"
   type = string
-  default = ""
+  default = "arn:aws:iam::924144197303:role/Admin"
 }
 variable "execution_role_name" {
     description = "Name of the execution role for the StackSet"
   type = string
-  default = ""
+  default = "arn:aws:iam::924144197303:role/AWSControlTowerExecution"
 }
 variable "security_account_id" {
     description = "Security account ID"
   type = string
-  default = ""
+  default = "924144197303"
 }
 variable "guardduty_s3_source_file" {
     description = "S3 bucket where the source files are stored"
   type = string
-  default =""
+  default ="https://control-tower-lavanya.s3.ap-south-1.amazonaws.com/guardduty/aws-control-tower-guardduty-enabler.template"
 }
 variable "guardduty_compliance_frequency" {
     description = "Frequency of compliance checks"
   type = string
-  default = ""
+  default = null
 }
 variable "guardduty_region_filter" {
     description = "Region filter for Control Tower"
-  type = string
-  default = ""
-}
-variable "guardduty_stack_instance_region" {
-  description = "region in which you want to deploy "
   type = string
   default = "us-east-1"
 }
@@ -291,18 +286,18 @@ variable "enable_security_hub" {
 #--------------config-------------------
 variable "enable_config" {
   type = bool
-  default = true
+  default = false
   description = "put true if you want to create stackset for config else false"
 }
 variable "config_stack_name" {
   type = string
-  default = ""
+  default = "config-stack"
   description = "name of stack for config"
 }
 variable "config_template_url" {
   type = string
   default = ""
-  description = ""
+  description = "https://control-tower-lavanya.s3.ap-south-1.amazonaws.com/config/aws-config-template.yaml"
 }
 variable "ConfigRecorderExcludedResourceTypes" {
   type = string
@@ -350,22 +345,22 @@ variable "enable_macie" {
 }
 variable "macie_stack_name" {
   type = string
-  default = ""
+  default = "macie-stack"
   description = "name of cloudfromation stack for macie."
 }
 variable "macie_template_url" {
   type = string
-  default = ""
+  default = "https://control-tower-lavanya.s3.ap-south-1.amazonaws.com/macie/enable-macie.yaml"
   description = "template file url for macie"
 }
 variable "macie_destination_bucket_name" {
   type = string
-  default = ""
+  default = "controltower-10-oct"
   description = "detination bucket name for macie"
 }
 variable "macie_lambda_file" {
   type = string
-  default = ""
+  default = "macie.zip"
   description = "lambda file path"
 }
 
