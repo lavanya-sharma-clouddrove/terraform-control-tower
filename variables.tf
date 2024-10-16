@@ -62,6 +62,11 @@ variable "delegated_account_id" {
   type = string
   default = ""
 }
+variable "template_bucket_name" {
+  description = "bukcet name in which files are stored"
+  type        = string
+  default     = "control-tower-lavanya"
+}
 
 
 #--------variables for access analyzer-----------
@@ -89,14 +94,10 @@ variable "access_analyzer_excluded_accounts" {
   default     = ""
 }
 
-variable "template_bucket_name" {
-  description = "bukcet name in which files are stored"
-  type        = string
-  default     = ""
-}
+
 
 variable "access_analyzer_lambda_file" {
-  description = "lambda file url from s3"
+  description = "lambda file path (lambda code zip file path) from s3"
   type        = string
   default     = ""
 }
@@ -202,7 +203,7 @@ variable "inspector_stack_name" {
   default = ""
 }
 variable "inspector_lambda_file" {
-  description = "URL of the CloudFormation lambda file"
+  description = "path of the CloudFormation lambda file (lambda code zip file path)"
   type = string
   default = ""
 }
@@ -243,7 +244,7 @@ variable "security_hub_ou_filter" {
   default = ""
 }
 variable "security_hub_s3_source_key" {
-   description = "S3 key (file path) for the CloudFormation template"
+   description = "S3 key (lambda code zip file path) for the CloudFormation template"
   type = string
   default = ""
 }
@@ -339,7 +340,7 @@ variable "inspection_lambda_template_url" {
 variable "inspection_lambda_lambda_file" {
   type = string
   default = ""
-  description = "lambda file url for inspection lambda"
+  description = "lambda file path for inspection lambda (lambda code zip file path)"
 }
 
 #--------------macie----------------
@@ -366,7 +367,7 @@ variable "macie_destination_bucket_name" {
 variable "macie_lambda_file" {
   type = string
   default = ""
-  description = "lambda file path"
+  description = "lambda file path (lambda code zip file path)"
 }
 
 #----------------subdomain delegation --------
@@ -393,7 +394,7 @@ variable "subdomain_delegation_authorized_account" {
 variable "subdomain_delegation_s3_key" {
   type = string
   default = ""
-  description = "s3 key for subdomain delegation master stack"
+  description = "s3 key for subdomain delegation master stack (lambda code zip file path)"
 }
 variable "subdomain_delegation_child_stack_name" {
   type = string
@@ -422,5 +423,34 @@ variable "enable_subdomain_delegation_child" {
 }
 
 #-------- aws notification webhook-------------------
-
+variable "enable_notification_webhook" {
+  type = bool
+  default = true
+  description = "put true if you want to deploy stack for aws notification webhook elase false"
+}
+variable "notification_webhook_stack_name" {
+  type = string
+  default = "ct-notification-webhook"
+  description = "control tower aws notification webhook stack name"
+}
+variable "notification_webhook_template_url" {
+  type = string
+  default = ""
+  description = "aws notification webhook service cloudfromation template url"
+}
+variable "webhook_url" {
+  type = string
+  default = ""
+  description  = "webhook url slack or any other."
+}
+variable "notification_webhook_rule_filter" {
+  type = string
+  default = "ALL_RULES"
+  description = "filter rules for aws notification url"
+}
+variable "notification_webhook_s3_key" {
+  type = string
+  default = ""
+  description  = "path for lambda zip file in bucket (lambda code zip file path)"
+}
 
