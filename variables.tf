@@ -45,7 +45,11 @@ variable "delimiter" {
 
 variable "tags" {
   type        = map(any)
-  default     = {"XYZ"}
+  default     = {
+    BusinessUnit = "XYZ"
+    Environment  = "Production"
+    Owner        = "lavanya"
+  }
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
 
