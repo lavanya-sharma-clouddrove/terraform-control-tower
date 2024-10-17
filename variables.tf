@@ -45,7 +45,7 @@ variable "delimiter" {
 
 variable "tags" {
   type        = map(any)
-  default     = {}
+  default     = {'XYZ'}
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
 
@@ -62,13 +62,18 @@ variable "delegated_account_id" {
   type = string
   default = ""
 }
+variable "template_bucket_name" {
+  description = "bukcet name in which files are stored"
+  type        = string
+  default     = "control-tower-lavanya"
+}
 
 
 #--------variables for access analyzer-----------
 variable "enable_access_analyzer" {
   type = bool
   description = "enable true if we want to create the stack elase false"
-  default = true
+  default = false
 }
 
 variable "access_analyzer_template_file" {
@@ -89,16 +94,12 @@ variable "access_analyzer_excluded_accounts" {
   default     = ""
 }
 
-variable "template_bucket_name" {
-  description = "bukcet name in which files are stored"
-  type        = string
-  default     = ""
-}
+
 
 variable "access_analyzer_lambda_file" {
-  description = "lambda file url from s3"
+  description = "lambda file path (lambda code zip file path) from s3"
   type        = string
-  default     = ""
+  default     = "access-analyser/access-analyser.zip"
 }
 
 variable "role_to_assume" {
@@ -119,17 +120,17 @@ variable "capabilities" {
 variable "detective_stack_name" {
     description = "The name of the CloudFormation stack"
   type = string
-  default = ""
+  default = "ct_detective_name"
 }
 variable "enable_detective" {
   type = bool
-  default = true
+  default = false
   description = "enable true if we want to create a stack for detective service elase put false"
 }
 variable "detective_lambda_file" {
  description =  "The S3 Path to the Lambda Zip File"
   type = string
-  default = ""
+  default = "detective/detective.zip"
 
 }
 variable "excluded_accounts" {
@@ -147,7 +148,7 @@ description = "s3 template file url"
 variable "guardduty_stack_name" {
     description = "Name of the CloudFormation Stack"
   type = string
-  default = "guardduty-stack"
+  default = "ct_guardduty"
 }
 variable "guardduty_template_file" {
     description = "URL of the CloudFormation template"
@@ -162,7 +163,7 @@ variable "administration_role_arn" {
 variable "execution_role_name" {
     description = "Name of the execution role for the StackSet"
   type = string
-  default = "arn:aws:iam::924144197303:role/AWSControlTowerExecution"
+  default = "AWSControlTowerExecution "
 }
 variable "security_account_id" {
     description = "Security account ID"
@@ -172,34 +173,39 @@ variable "security_account_id" {
 variable "guardduty_s3_source_file" {
     description = "S3 bucket where the source files are stored"
   type = string
-  default ="https://control-tower-lavanya.s3.ap-south-1.amazonaws.com/guardduty/aws-control-tower-guardduty-enabler.template"
+  default ="guardduty/guardduty_enabler.zip "
 }
 variable "guardduty_compliance_frequency" {
     description = "Frequency of compliance checks"
   type = string
-  default = null
+  default = ""
 }
 variable "guardduty_region_filter" {
     description = "Region filter for Control Tower"
+  type = string
+  default = ""
+}
+variable "guardduty_stack_instance_region" {
+  description = "region in which you want to deploy "
   type = string
   default = "us-east-1"
 }
 variable "enable_guardduty" {
   description = "true if you want to deploy guardduty stacket else false"
   type = bool
-  default = true
+  default = false
 }
 
 #----------inspector variables---------
 variable "inspector_stack_name" {
    description = "Name of the CloudFormation StackSet"
   type = string
-  default = ""
+  default = "ct_inspector"
 }
 variable "inspector_lambda_file" {
-  description = "URL of the CloudFormation lambda file"
+  description = "path of the CloudFormation lambda file (lambda code zip file path)"
   type = string
-  default = ""
+  default = "inspector/inspector.zip"
 }
 variable "inspector_template_file" {
   description = "URL of the CloudFormation template"
@@ -209,17 +215,17 @@ variable "inspector_template_file" {
 variable "enable_inspector" {
   description = "enable true if you want to create stackset for inspector else false"
   type = bool
-  default = true
+  default = false
 }
 variable "inspector_account_id" {
   type = string
-  default = ""
+  default = "924144197303"
 }
 
 #--------security-hub-----------
 variable "security_hub_stack_name" {
   type = string
-  default = ""
+  default = "ct_security_hub"
    description = "Name of the CloudFormation stack"
 }
 variable "security_hub_template_url" {
@@ -238,9 +244,9 @@ variable "security_hub_ou_filter" {
   default = ""
 }
 variable "security_hub_s3_source_key" {
-   description = "S3 key (file path) for the CloudFormation template"
+   description = "S3 key (lambda code zip file path) for the CloudFormation template"
   type = string
-  default = ""
+  default = "security-hub/securityhub_enabler.zip"
 }
 variable "security_hub_compliance_frequency" {
   description = "Frequency of compliance checks"
@@ -250,36 +256,36 @@ variable "security_hub_compliance_frequency" {
 variable "security_hub_aws_standard" {
   description = "Enable AWS standard (Yes/No)"
   type = string
-  default = ""
+  default = "No"
 }
 variable "security_hub_cis120_standard" {
    description = "Enable CIS 1.20 standard (Yes/No)"
   type = string
-  default = ""
+  default = "No"
 }
 variable "security_hub_cis140_standard" {
    description = "Enable CIS 1.40 standard (Yes/No)"
   type = string
-  default = ""
+  default = "No"
 }
 variable "seccurity_hub_cis140_standard" {
   description = "Enable CIS 1.40 standard (Yes/No)"
   type = string
-  default = ""
+  default = "No"
 }
 variable "security_hub_pci_standard" {
   description = "Enable PCI standard (Yes/No)"
   type = string
-  default = ""
+  default = "No"
 }
 variable "security_hub_nist_standard" {
   description = "Enable NIST standard (Yes/No)"
   type = string
-  default = ""
+  default = "No"
 }
 variable "enable_security_hub" {
   type = bool
-  default = true
+  default = false
   description = "put true if you want to create stackset for security_hub else false"
 }
 
@@ -291,13 +297,13 @@ variable "enable_config" {
 }
 variable "config_stack_name" {
   type = string
-  default = "config-stack"
+  default = "ct_config"
   description = "name of stack for config"
 }
 variable "config_template_url" {
   type = string
   default = ""
-  description = "https://control-tower-lavanya.s3.ap-south-1.amazonaws.com/config/aws-config-template.yaml"
+  description = ""
 }
 variable "ConfigRecorderExcludedResourceTypes" {
   type = string
@@ -313,17 +319,17 @@ variable "cloudformation_version" {
 #----------------------inspection lambda-----------------
 variable "enable_inspection_lambda" {
   type = bool
-  default = true
+  default = false
   description = "put true if you want to deploy stack for inspection lambda else false"
 }
 variable "inspection_stack_name" {
   type = string
-  default = ""
+  default = "ct_inspection_lambda"
   description = "name of inspection lambda stack"
 }
 variable "inspection_destination_bucket_name" {
   type = string
-  default = ""
+  default = "control-tower-lavanya"
   description = "destination bucket name for inspection lambda"
 }
 variable "inspection_lambda_template_url" {
@@ -333,35 +339,35 @@ variable "inspection_lambda_template_url" {
 }
 variable "inspection_lambda_lambda_file" {
   type = string
-  default = ""
-  description = "lambda file url for inspection lambda"
+  default = "inspection-lambda/aws-inspection-lambda.zip"
+  description = "lambda file path for inspection lambda (lambda code zip file path)"
 }
 
 #--------------macie----------------
 variable "enable_macie" {
   type = bool
-  default = true
+  default = false
   description = "put true if you want to deploy stak for macie else false"
 }
 variable "macie_stack_name" {
   type = string
-  default = "macie-stack"
+  default = "ct_macie"
   description = "name of cloudfromation stack for macie."
 }
 variable "macie_template_url" {
   type = string
-  default = "https://control-tower-lavanya.s3.ap-south-1.amazonaws.com/macie/enable-macie.yaml"
+  default = ""
   description = "template file url for macie"
 }
 variable "macie_destination_bucket_name" {
   type = string
-  default = "controltower-10-oct"
+  default = "control-tower-lavanya"
   description = "detination bucket name for macie"
 }
 variable "macie_lambda_file" {
   type = string
-  default = "macie.zip"
-  description = "lambda file path"
+  default = "aws-macie/macie.zip"
+  description = "lambda file path (lambda code zip file path)"
 }
 
 #----------------subdomain delegation --------
@@ -388,7 +394,7 @@ variable "subdomain_delegation_authorized_account" {
 variable "subdomain_delegation_s3_key" {
   type = string
   default = ""
-  description = "s3 key for subdomain delegation master stack"
+  description = "s3 key for subdomain delegation master stack (lambda code zip file path)"
 }
 variable "subdomain_delegation_child_stack_name" {
   type = string
@@ -417,5 +423,34 @@ variable "enable_subdomain_delegation_child" {
 }
 
 #-------- aws notification webhook-------------------
-
+variable "enable_notification_webhook" {
+  type = bool
+  default = false
+  description = "put true if you want to deploy stack for aws notification webhook elase false"
+}
+variable "notification_webhook_stack_name" {
+  type = string
+  default = "ct-notification-webhook"
+  description = "control tower aws notification webhook stack name"
+}
+variable "notification_webhook_template_url" {
+  type = string
+  default = ""
+  description = "aws notification webhook service cloudfromation template url"
+}
+variable "webhook_url" {
+  type = string
+  default = ""
+  description  = "webhook url slack or any other."
+}
+variable "notification_webhook_rule_filter" {
+  type = string
+  default = "ALL_RULES"
+  description = "filter rules for aws notification url"
+}
+variable "notification_webhook_s3_key" {
+  type = string
+  default = "aws-notification-webhook/aws-control-tower-webhook-notifications.zip"
+  description  = "path for lambda zip file in bucket (lambda code zip file path)"
+}
 
