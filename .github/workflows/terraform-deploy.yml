@@ -1,56 +1,66 @@
-name: Terraform Deployment
+name: Deploy Terraform Stack
 
+# Triggered only when manually run (workflow_dispatch)
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Environment to deploy to'
+      enable_access_analyzer:
+        description: 'Enable Access Analyzer Stack'
         required: true
-        default: 'dev'
-
-env:
-  TF_VERSION: '1.0.0'
+        default: 'false'
+        type: boolean
+      enable_detective:
+        description: 'Enable Detective Stack'
+        required: true
+        default: 'false'
+        type: boolean
+      enable_guardduty:
+        description: 'Enable GuardDuty Stack'
+        required: true
+        default: 'false'
+        type: boolean
+      enable_security_hub:
+        description: 'Enable Security Hub Stack'
+        required: true
+        default: 'false'
+        type: boolean
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  deploy:
+    name: Deploy Terraform
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: ${{ env.TF_VERSION }}
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0  # Change version if needed
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+      - name: Initialize Terraform
+        run: terraform init
 
-    - name: Terraform Init
-      run: terraform init
+      - name: Format Terraform code
+        run: terraform fmt -check
 
-    - name: Terraform Plan
-      env:
-        TF_VAR_environment: ${{ github.event.inputs.environment }}
-        TF_VAR_region: ${{ secrets.AWS_REGION }}
-        TF_VAR_delegated_account_id: ${{ secrets.DELEGATED_ACCOUNT_ID }}
-        TF_VAR_template_bucket_name: ${{ secrets.TEMPLATE_BUCKET_NAME }}
-        TF_VAR_access_analyzer_template_file: ${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}
-        TF_VAR_detective_template_file: ${{ secrets.DETECTIVE_TEMPLATE_FILE }}
-        TF_VAR_guardduty_template_file: ${{ secrets.GUARDDUTY_TEMPLATE_FILE }}
-        TF_VAR_inspector_template_file: ${{ secrets.INSPECTOR_TEMPLATE_FILE }}
-        TF_VAR_security_hub_template_url: ${{ secrets.SECURITY_HUB_TEMPLATE_URL }}
-        TF_VAR_config_template_url: ${{ secrets.CONFIG_TEMPLATE_URL }}
-        TF_VAR_inspection_lambda_template_url: ${{ secrets.INSPECTION_LAMBDA_TEMPLATE_URL }}
-        TF_VAR_macie_template_url: ${{ secrets.MACIE_TEMPLATE_URL }}
-        TF_VAR_subdomain_delegation_template_file: ${{ secrets.SUBDOMAIN_DELEGATION_TEMPLATE_FILE }}
-      run: terraform plan -out=tfplan
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan \
+            -var "enable_access_analyzer=${{ github.event.inputs.enable_access_analyzer }}" \
+            -var "enable_detective=${{ github.event.inputs.enable_detective }}" \
+            -var "enable_guardduty=${{ github.event.inputs.enable_guardduty }}" \
+            -var "enable_security_hub=${{ github.event.inputs.enable_security_hub }}" \
+            -var "region=${{ secrets.AWS_REGION }}" \
+            -var "delegated_account_id=${{ secrets.DELEGATED_ACCOUNT_ID }}" \
+            -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
+            -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}"
 
-    - name: Terraform Apply
-      run: terraform apply -auto-approve tfplan
+      - name: Apply Terraform (manual approval required)
+        if: ${{ github.event.inputs.confirm_apply == 'true' }}  # Only if 'true' input
+        run: terraform apply -auto-approve
+
+      - name: Terraform Output
+        run: terraform output
