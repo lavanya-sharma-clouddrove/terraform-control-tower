@@ -1,6 +1,6 @@
 name: Deploy Terraform Stack
 
-# Triggered only when manually run (workflow_dispatch)
+# Trigger the workflow manually
 on:
   workflow_dispatch:
     inputs:
@@ -24,6 +24,41 @@ on:
         required: true
         default: 'false'
         type: boolean
+      enable_inspector:
+        description: 'Enable Inspector Stack'
+        required: true
+        default: 'false'
+        type: boolean
+      enable_config:
+        description: 'Enable Config Stack'
+        required: true
+        default: 'false'
+        type: boolean
+      enable_inspection_lambda:
+        description: 'Enable Inspection Lambda Stack'
+        required: true
+        default: 'false'
+        type: boolean
+      enable_macie:
+        description: 'Enable Macie Stack'
+        required: true
+        default: 'false'
+        type: boolean
+      enable_subdomain_delegation_master:
+        description: 'Enable Subdomain Delegation Master Stack'
+        required: true
+        default: 'false'
+        type: boolean
+      enable_subdomain_delegation_child:
+        description: 'Enable Subdomain Delegation Child Stack'
+        required: true
+        default: 'false'
+        type: boolean
+      enable_notification_webhook:
+        description: 'Enable Notification Webhook Stack'
+        required: true
+        default: 'false'
+        type: boolean
 
 jobs:
   deploy:
@@ -31,20 +66,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Step 2: Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.0  # Change version if needed
+          terraform_version: 1.5.0  # You can specify your desired version
 
+      # Step 3: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 4: Initialize Terraform
       - name: Initialize Terraform
         run: terraform init
 
+      # Step 5: Format Terraform code
       - name: Format Terraform code
         run: terraform fmt -check
 
+      # Step 6: Terraform Plan
       - name: Terraform Plan
         id: plan
         run: |
@@ -53,14 +101,23 @@ jobs:
             -var "enable_detective=${{ github.event.inputs.enable_detective }}" \
             -var "enable_guardduty=${{ github.event.inputs.enable_guardduty }}" \
             -var "enable_security_hub=${{ github.event.inputs.enable_security_hub }}" \
+            -var "enable_inspector=${{ github.event.inputs.enable_inspector }}" \
+            -var "enable_config=${{ github.event.inputs.enable_config }}" \
+            -var "enable_inspection_lambda=${{ github.event.inputs.enable_inspection_lambda }}" \
+            -var "enable_macie=${{ github.event.inputs.enable_macie }}" \
+            -var "enable_subdomain_delegation_master=${{ github.event.inputs.enable_subdomain_delegation_master }}" \
+            -var "enable_subdomain_delegation_child=${{ github.event.inputs.enable_subdomain_delegation_child }}" \
+            -var "enable_notification_webhook=${{ github.event.inputs.enable_notification_webhook }}" \
             -var "region=${{ secrets.AWS_REGION }}" \
             -var "delegated_account_id=${{ secrets.DELEGATED_ACCOUNT_ID }}" \
             -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
             -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}"
 
+      # Step 7: Apply Terraform (manual approval)
       - name: Apply Terraform (manual approval required)
-        if: ${{ github.event.inputs.confirm_apply == 'true' }}  # Only if 'true' input
+        if: ${{ github.event.inputs.confirm_apply == 'true' }}  # Only apply if 'true'
         run: terraform apply -auto-approve
 
+      # Step 8: Output Terraform results
       - name: Terraform Output
         run: terraform output
