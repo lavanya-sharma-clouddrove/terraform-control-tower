@@ -226,3 +226,19 @@ resource "aws_cloudformation_stack" "child_stack" {
   capabilities = var.capabilities
   tags         = module.labels.tags
 }
+#aws webhook
+resource "aws_cloudformation_stack" "ct_notifications_stack" {
+  count         = var.enable_notification_webhook ? 1 : 0
+  name          = var.notification_webhook_stack_name
+  template_url  = var.notification_webhook_template_url
+
+  parameters = {
+    WebhookUrl      = var.webhook_url  
+    RuleFilter      = var.notification_webhook_rule_filter
+    S3BucketName    = var.template_bucket_name  
+    S3Key           = var.notification_webhook_s3_key         
+  }
+
+  capabilities = var.capabilities
+  tags         = module.labels.tags
+}
