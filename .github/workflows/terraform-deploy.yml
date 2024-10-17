@@ -59,6 +59,11 @@ on:
         required: true
         default: 'false'
         type: boolean
+      confirm_apply:
+        description: 'Confirm Apply'
+        required: true
+        default: 'false'
+        type: boolean
 
 jobs:
   deploy:
