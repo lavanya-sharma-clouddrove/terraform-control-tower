@@ -9,11 +9,6 @@ on:
         required: true
         default: 'false'
         type: boolean
-      enable_detective:
-        description: 'Enable Detective Stack'
-        required: true
-        default: 'false'
-        type: boolean
       enable_guardduty:
         description: 'Enable GuardDuty Stack'
         required: true
@@ -41,16 +36,6 @@ on:
         type: boolean
       enable_macie:
         description: 'Enable Macie Stack'
-        required: true
-        default: 'false'
-        type: boolean
-      enable_subdomain_delegation_master:
-        description: 'Enable Subdomain Delegation Master Stack'
-        required: true
-        default: 'false'
-        type: boolean
-      enable_subdomain_delegation_child:
-        description: 'Enable Subdomain Delegation Child Stack'
         required: true
         default: 'false'
         type: boolean
