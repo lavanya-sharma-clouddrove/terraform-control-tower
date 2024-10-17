@@ -73,6 +73,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}  # Add the session token here
 
       # Step 4: Initialize Terraform
       - name: Initialize Terraform
@@ -88,16 +89,12 @@ jobs:
         run: |
           terraform plan \
             -var "enable_access_analyzer=${{ github.event.inputs.enable_access_analyzer }}" \
-            -var "enable_detective=${{ github.event.inputs.enable_detective }}" \
             -var "enable_guardduty=${{ github.event.inputs.enable_guardduty }}" \
             -var "enable_security_hub=${{ github.event.inputs.enable_security_hub }}" \
             -var "enable_inspector=${{ github.event.inputs.enable_inspector }}" \
             -var "enable_config=${{ github.event.inputs.enable_config }}" \
             -var "enable_inspection_lambda=${{ github.event.inputs.enable_inspection_lambda }}" \
             -var "enable_macie=${{ github.event.inputs.enable_macie }}" \
-            -var "enable_subdomain_delegation_master=${{ github.event.inputs.enable_subdomain_delegation_master }}" \
-            -var "enable_subdomain_delegation_child=${{ github.event.inputs.enable_subdomain_delegation_child }}" \
-            -var "enable_notification_webhook=${{ github.event.inputs.enable_notification_webhook }}" \
             -var "region=${{ secrets.AWS_REGION }}" \
             -var "delegated_account_id=${{ secrets.DELEGATED_ACCOUNT_ID }}" \
             -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
