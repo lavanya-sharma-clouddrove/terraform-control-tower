@@ -237,7 +237,7 @@ resource "aws_cloudformation_stack" "ct_notifications_stack" {
   parameters = {
     WebhookUrl      = var.webhook_url  
     RuleFilter      = var.notification_webhook_rule_filter
-    S3BucketName    = var.template_bucket_name  
+    S3BucketName        = var.template_bucket_name  
     S3Key           = var.notification_webhook_s3_key 
   }
 
