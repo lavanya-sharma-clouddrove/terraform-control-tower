@@ -60,13 +60,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Step 2: Set up Terraform
+      # Step 2: Debug input values (before initializing Terraform)
+      - name: Debug Terraform Inputs
+        run: |
+          echo "Enable Access Analyzer: ${{ github.event.inputs.enable_access_analyzer }}"
+          echo "Enable GuardDuty: ${{ github.event.inputs.enable_guardduty }}"
+          echo "Enable Security Hub: ${{ github.event.inputs.enable_security_hub }}"
+          echo "Enable Inspector: ${{ github.event.inputs.enable_inspector }}"
+          echo "Enable Config: ${{ github.event.inputs.enable_config }}"
+          echo "Enable Inspection Lambda: ${{ github.event.inputs.enable_inspection_lambda }}"
+          echo "Enable Macie: ${{ github.event.inputs.enable_macie }}"
+          echo "Enable Notification Webhook: ${{ github.event.inputs.enable_notification_webhook }}"
+          echo "Region: ${{ secrets.AWS_REGION }}"
+
+      # Step 3: Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.0  # You can specify your desired version
+          terraform_version: 1.5.0  # Specify your desired version
 
-      # Step 3: Configure AWS credentials
+      # Step 4: Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -75,11 +88,11 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-      # Step 4: Initialize Terraform
+      # Step 5: Initialize Terraform
       - name: Initialize Terraform
         run: terraform init
 
-      # Step 5: Terraform Plan
+      # Step 6: Terraform Plan
       - name: Terraform Plan
         id: plan
         run: |
@@ -97,11 +110,26 @@ jobs:
             -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
             -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}"
 
-      # Step 6: Apply Terraform (manual approval)
+      # Step 7: Check Terraform Plan result
+      - name: Check Plan Result
+        run: |
+          if [[ -n $(terraform show -json | jq '.values') ]]; then
+            echo "Plan successful!"
+          else
+            echo "Plan failed or no changes."
+          fi
+
+      # Step 8: Apply Terraform (manual approval required)
       - name: Apply Terraform (manual approval required)
         if: ${{ github.event.inputs.confirm_apply == 'true' }}  # Only apply if 'true'
         run: terraform apply -auto-approve
 
-      # Step 7: Output Terraform results
+      # Step 9: Output Terraform results
       - name: Terraform Output
         run: terraform output
+
+      # Step 10: Handle errors (Optional, for better debugging)
+      - name: Handle errors
+        if: failure()
+        run: |
+          echo "Terraform apply failed. Please check the logs for details."
