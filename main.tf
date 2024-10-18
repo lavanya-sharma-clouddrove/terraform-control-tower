@@ -189,7 +189,8 @@ resource "aws_cloudformation_stack" "macie_stack" {
     OrganizationId        = data.aws_organizations_organization.organization.id          
     AssumeRole            = var.role_to_assume
     S3SourceBucket        = var.template_bucket_name
-    S3Key                 = var.macie_lambda_file    
+    S3Key                 = var.macie_lambda_file 
+    MacieMasterAccountId = var.master_account_id
   }
 
   capabilities = var.capabilities
