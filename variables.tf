@@ -373,6 +373,9 @@ variable "macie_lambda_file" {
   default = "aws-macie/macie.zip"
   description = "lambda file path (lambda code zip file path)"
 }
+variable "master_account_id"{
+type = string
+}
 
 #----------------subdomain delegation --------
 variable "subdomain_delegation_master_stack_name" {
