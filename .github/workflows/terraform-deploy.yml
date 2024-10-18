@@ -73,13 +73,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}  # Add the session token here
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
       # Step 4: Initialize Terraform
       - name: Initialize Terraform
         run: terraform init
 
-      # Step 6: Terraform Plan
+      # Step 5: Terraform Plan
       - name: Terraform Plan
         id: plan
         run: |
@@ -91,16 +91,17 @@ jobs:
             -var "enable_config=${{ github.event.inputs.enable_config }}" \
             -var "enable_inspection_lambda=${{ github.event.inputs.enable_inspection_lambda }}" \
             -var "enable_macie=${{ github.event.inputs.enable_macie }}" \
+            -var "enable_notification_webhook=${{ github.event.inputs.enable_notification_webhook }}" \
             -var "region=${{ secrets.AWS_REGION }}" \
             -var "delegated_account_id=${{ secrets.DELEGATED_ACCOUNT_ID }}" \
             -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
             -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}"
 
-      # Step 7: Apply Terraform (manual approval)
+      # Step 6: Apply Terraform (manual approval)
       - name: Apply Terraform (manual approval required)
         if: ${{ github.event.inputs.confirm_apply == 'true' }}  # Only apply if 'true'
         run: terraform apply -auto-approve
 
-      # Step 8: Output Terraform results
+      # Step 7: Output Terraform results
       - name: Terraform Output
         run: terraform output
