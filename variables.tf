@@ -301,7 +301,7 @@ variable "enable_config" {
 }
 variable "config_stack_name" {
   type = string
-  default = "ct_config"
+  default = "ctconfig"
   description = "name of stack for config"
 }
 variable "config_template_url" {
