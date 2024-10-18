@@ -429,6 +429,7 @@ variable "enable_subdomain_delegation_child" {
 #-------- aws notification webhook-------------------
 variable "enable_notification_webhook" {
   type = bool
+  default = false
   description = "put true if you want to deploy stack for aws notification webhook elase false"
 }
 variable "notification_webhook_stack_name" {
