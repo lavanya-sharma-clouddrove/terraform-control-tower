@@ -86,7 +86,7 @@ variable "access_analyzer_template_file" {
     description = "URL of the CloudFormation template"
 }
 
-variable "access_analyser_stack_name" {
+variable "access_analyzer_stack_name" {
   type = string
   default = "AccessAnalyzerStack"
   description = "name of stack"
