@@ -136,7 +136,8 @@ jobs:
             -var "delegated_account_id=${{ secrets.DELEGATED_ACCOUNT_ID }}" \
             -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
             -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}" \
-            -var "config_template_url=${{ secrets.CONFIG_TEMPLATE_URL }}"
+            -var "config_template_url=${{ secrets.CONFIG_TEMPLATE_URL }}" \
+            -var "macie_template_url=${{ secrets.MACIE_TEMPLATE_URL }}"
 
       # Step 9: Output Terraform results
       - name: Terraform Output
