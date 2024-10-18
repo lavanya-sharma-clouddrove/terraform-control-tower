@@ -113,10 +113,10 @@ jobs:
       # Step 7: Check Terraform Plan result
       - name: Check Plan Result
         run: |
-          if [[ -n $(terraform show -json | jq '.values') ]]; then
-            echo "Plan successful!"
+          if terraform show -json | jq -e '.planned_values.root_module.resources | length > 0'; then
+            echo "Plan successful! Resources will be created."
           else
-            echo "Plan failed or no changes."
+            echo "Plan successful but no changes detected."
           fi
 
       # Step 8: Apply Terraform (manual approval required)
