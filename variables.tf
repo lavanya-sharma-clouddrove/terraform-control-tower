@@ -375,6 +375,7 @@ variable "macie_lambda_file" {
 }
 variable "master_account_id"{
 type = string
+default = ""
 }
 
 #----------------subdomain delegation --------
