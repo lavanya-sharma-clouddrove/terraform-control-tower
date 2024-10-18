@@ -7,47 +7,47 @@ on:
       enable_access_analyzer:
         description: 'Enable Access Analyzer Stack'
         required: true
-        default: 'false'
+        default: false
         type: boolean
       enable_guardduty:
         description: 'Enable GuardDuty Stack'
         required: true
-        default: 'false'
+        default: false
         type: boolean
       enable_security_hub:
         description: 'Enable Security Hub Stack'
         required: true
-        default: 'false'
+        default: false
         type: boolean
       enable_inspector:
         description: 'Enable Inspector Stack'
         required: true
-        default: 'false'
+        default: false
         type: boolean
       enable_config:
         description: 'Enable Config Stack'
         required: true
-        default: 'false'
+        default: false
         type: boolean
       enable_inspection_lambda:
         description: 'Enable Inspection Lambda Stack'
         required: true
-        default: 'false'
+        default: false
         type: boolean
       enable_macie:
         description: 'Enable Macie Stack'
         required: true
-        default: 'false'
+        default: false
         type: boolean
       enable_notification_webhook:
         description: 'Enable Notification Webhook Stack'
         required: true
-        default: 'false'
+        default: false
         type: boolean
       confirm_apply:
         description: 'Confirm Apply'
         required: true
-        default: 'false'
+        default: false
         type: boolean
 
 jobs:
@@ -122,7 +122,20 @@ jobs:
       # Step 8: Apply Terraform (manual approval required)
       - name: Apply Terraform (manual approval required)
         if: ${{ github.event.inputs.confirm_apply == 'true' }}  # Only apply if 'true'
-        run: terraform apply -auto-approve
+        run: |
+          terraform apply -auto-approve \
+            -var "enable_access_analyzer=${{ github.event.inputs.enable_access_analyzer }}" \
+            -var "enable_guardduty=${{ github.event.inputs.enable_guardduty }}" \
+            -var "enable_security_hub=${{ github.event.inputs.enable_security_hub }}" \
+            -var "enable_inspector=${{ github.event.inputs.enable_inspector }}" \
+            -var "enable_config=${{ github.event.inputs.enable_config }}" \
+            -var "enable_inspection_lambda=${{ github.event.inputs.enable_inspection_lambda }}" \
+            -var "enable_macie=${{ github.event.inputs.enable_macie }}" \
+            -var "enable_notification_webhook=${{ github.event.inputs.enable_notification_webhook }}" \
+            -var "region=${{ secrets.AWS_REGION }}" \
+            -var "delegated_account_id=${{ secrets.DELEGATED_ACCOUNT_ID }}" \
+            -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
+            -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}"
 
       # Step 9: Output Terraform results
       - name: Terraform Output
