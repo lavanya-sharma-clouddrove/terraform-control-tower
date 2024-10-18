@@ -454,7 +454,7 @@ variable "notification_webhook_rule_filter" {
 }
 variable "notification_webhook_s3_key" {
   type = string
-  default = "aws-notification-webhook/aws-control-tower-webhook-notifications.zip"
+  default = "notification-webhook//aws-control-tower-webhook-notifications.zip"
   description  = "path for lambda zip file in bucket (lambda code zip file path)"
 }
 
