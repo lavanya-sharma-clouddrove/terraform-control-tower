@@ -417,12 +417,12 @@ variable "subdomain_delegation_master_account_id" {
 }
 variable "enable_subdomain_delegation_master" {
   type = bool
-  default = true
+  default = false
   description = "put true if you want to deploy else false for subdomain delegation master"
 }
 variable "enable_subdomain_delegation_child" {
   type = bool
-  default = true
+  default = false
   description = "put true if you want to deploy else false for subdomain delegation child"
 }
 
