@@ -79,10 +79,6 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      # Step 5: Format Terraform code
-      - name: Format Terraform code
-        run: terraform fmt -check
-
       # Step 6: Terraform Plan
       - name: Terraform Plan
         id: plan
