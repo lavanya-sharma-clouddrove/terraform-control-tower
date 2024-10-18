@@ -377,7 +377,7 @@ variable "macie_lambda_file" {
 #----------------subdomain delegation --------
 variable "subdomain_delegation_master_stack_name" {
   type = string
-  default = ""
+  default = "ct-subdomain-delegtion-master"
   description = "the value for name of stack for master account "
 }
 variable "subdomain_delegation_template_file" {
@@ -402,7 +402,7 @@ variable "subdomain_delegation_s3_key" {
 }
 variable "subdomain_delegation_child_stack_name" {
   type = string
-  default = ""
+  default = "subdomain-delegation-child"
   description = "child stack name for subdomain delegation"
 }
 variable "subdomain_delegation_domain_name" {
