@@ -138,7 +138,7 @@ jobs:
             -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}" \
             -var "config_template_url=${{ secrets.CONFIG_TEMPLATE_URL }}" \
             -var "macie_template_url=${{ secrets.MACIE_TEMPLATE_URL }}"  \
-            -var "MacieMasterAccountId=${{ secrets.MACIE_MASTER_ACCOUNT_ID }}
+            -var "MacieMasterAccountId=${{ secrets.MACIE_MASTER_ACCOUNT_ID }}"
 
       # Step 9: Output Terraform results
       - name: Terraform Output
