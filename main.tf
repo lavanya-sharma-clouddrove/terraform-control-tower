@@ -18,7 +18,7 @@ module "labels" {
 # Access Analyzer
 resource "aws_cloudformation_stack_set" "access_analyzer_stackset" {
   count                   = var.enable_access_analyzer ? 1 : 0 
-  name                    = var.access_analyser_stack_name
+  name                    = var.access_analyzer_stack_name
   template_url            = var.access_analyzer_template_file
   administration_role_arn = var.administration_role_arn
   execution_role_name     = var.execution_role_name
@@ -40,10 +40,10 @@ resource "aws_cloudformation_stack_set_instance" "access_analyzer_instance" {
   count          = var.enable_access_analyzer ? 1 : 0 
   account_id     = data.aws_caller_identity.current.account_id
   region         = var.region
-  stack_set_name = var.enable_access_analyzer ? aws_cloudformation_stack_set.access_analyzer_stackset[0].name : null
+  stack_set_name = aws_cloudformation_stack_set.access_analyzer_stackset[0].name
 }
 
-# Detective (nothing mention in docs stack or stackset)
+# Detective
 resource "aws_cloudformation_stack_set" "detective_stackset" {
   count                   = var.enable_detective ? 1 : 0 
   name                    = var.detective_stack_name
@@ -68,14 +68,15 @@ resource "aws_cloudformation_stack_set_instance" "detective_instance" {
   count          = var.enable_detective ? 1 : 0 
   account_id     = data.aws_caller_identity.current.account_id
   region         = var.region
-  stack_set_name = var.enable_detective ? aws_cloudformation_stack_set.detective_stackset[0].name : null
+  stack_set_name = aws_cloudformation_stack_set.detective_stackset[0].name
 }
 
-# GuardDuty 
+# GuardDuty
 resource "aws_cloudformation_stack" "guardduty_stack" {
   count                   = var.enable_guardduty ? 1 : 0 
   name                    = var.guardduty_stack_name
   template_url            = var.guardduty_template_file
+
   parameters = {
     OrganizationId      = data.aws_organizations_organization.organization.id
     SecurityAccountId   = var.delegated_account_id
@@ -84,7 +85,7 @@ resource "aws_cloudformation_stack" "guardduty_stack" {
   }
 
   capabilities = var.capabilities
-  tags = module.labels.tags
+  tags         = module.labels.tags
 }
 
 # Inspector
@@ -112,7 +113,7 @@ resource "aws_cloudformation_stack_set_instance" "inspector_instance" {
   count          = var.enable_inspector ? 1 : 0
   account_id     = data.aws_caller_identity.current.account_id
   region         = var.region
-  stack_set_name = var.enable_inspector ? aws_cloudformation_stack_set.inspector_stackset[0].name : null
+  stack_set_name = aws_cloudformation_stack_set.inspector_stackset[0].name
 }
 
 # Security Hub
@@ -226,7 +227,8 @@ resource "aws_cloudformation_stack" "child_stack" {
   capabilities = var.capabilities
   tags         = module.labels.tags
 }
-#aws webhook
+
+# AWS Webhook
 resource "aws_cloudformation_stack" "ct_notifications_stack" {
   count         = var.enable_notification_webhook ? 1 : 0
   name          = var.notification_webhook_stack_name
@@ -235,8 +237,8 @@ resource "aws_cloudformation_stack" "ct_notifications_stack" {
   parameters = {
     WebhookUrl      = var.webhook_url  
     RuleFilter      = var.notification_webhook_rule_filter
-    S3BucketName    = var.template_bucket_name  
-    S3Key           = var.notification_webhook_s3_key         
+    S3Bucket        = var.template_bucket_name  
+    S3Key           = var.notification_webhook_s3_key 
   }
 
   capabilities = var.capabilities
