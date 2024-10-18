@@ -58,7 +58,7 @@ jobs:
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Step 2: Debug input values (before initializing Terraform)
       - name: Debug Terraform Inputs
