@@ -355,7 +355,7 @@ variable "enable_macie" {
 }
 variable "macie_stack_name" {
   type = string
-  default = "ct_macie"
+  default = "ct-macie"
   description = "name of cloudfromation stack for macie."
 }
 variable "macie_template_url" {
