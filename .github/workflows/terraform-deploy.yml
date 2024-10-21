@@ -70,7 +70,7 @@ jobs:
           echo "Enable Config: ${{ github.event.inputs.enable_config }}"
           echo "Enable Inspection Lambda: ${{ github.event.inputs.enable_inspection_lambda }}"
           echo "Enable Macie: ${{ github.event.inputs.enable_macie }}"
-          echo "Enable Notification Webhook: ${{ github.event.inputs.enable_notification_webhook }}"
+          echo "Enable detective: ${{ github.event.inputs.enable_detective }}"
           echo "Region: ${{ secrets.AWS_REGION }}"
 
       # Step 3: Set up Terraform
@@ -105,7 +105,7 @@ jobs:
             -var "enable_config=${{ github.event.inputs.enable_config }}" \
             -var "enable_inspection_lambda=${{ github.event.inputs.enable_inspection_lambda }}" \
             -var "enable_macie=${{ github.event.inputs.enable_macie }}" \
-            -var "enable_notification_webhook=${{ github.event.inputs.enable_notification_webhook }}" \
+            -var "enable_detective=${{ github.event.inputs.enable_detective }}" \
             -var "region=${{ secrets.AWS_REGION }}" \
             -var "delegated_account_id=${{ secrets.DELEGATED_ACCOUNT_ID }}" \
             -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
