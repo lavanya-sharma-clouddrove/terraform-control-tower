@@ -190,7 +190,7 @@ resource "aws_cloudformation_stack" "macie_stack" {
     AssumeRole            = var.role_to_assume
     S3SourceBucket        = var.template_bucket_name
     S3Key                 = var.macie_lambda_file 
-    MacieMasterAccountId = ${{ secrets.MACIE_MASTER_ACCOUNT_ID }}
+    MacieMasterAccountId = var.macie_master_account_id
   }
 
   capabilities = var.capabilities
