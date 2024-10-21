@@ -64,7 +64,7 @@ variable "managedby" {
 
 variable "delegated_account_id" {
   type = string
-  default = ""
+  default = "637423606344"
 }
 variable "template_bucket_name" {
   description = "bukcet name in which files are stored"
@@ -95,10 +95,8 @@ variable "access_analyzer_stack_name" {
 variable "access_analyzer_excluded_accounts" {
     description = "Accounts to be excluded from the Access Analyzer"
   type        = string
-  default     = ""
+  default     = "637423606344"
 }
-
-
 
 variable "access_analyzer_lambda_file" {
   description = "lambda file path (lambda code zip file path) from s3"
