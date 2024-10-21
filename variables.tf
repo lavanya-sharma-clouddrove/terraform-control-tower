@@ -66,6 +66,10 @@ variable "delegated_account_id" {
   type = string
   default = "637423606344"
 }
+variable "master_account_id"{
+type = string
+default = "" 
+}
 variable "template_bucket_name" {
   description = "bukcet name in which files are stored"
   type        = string
@@ -371,10 +375,7 @@ variable "macie_lambda_file" {
   default = "aws-macie/macie.zip"
   description = "lambda file path (lambda code zip file path)"
 }
-variable "master_account_id"{
-type = string
-default = ""
-}
+
 
 #----------------subdomain delegation --------
 variable "subdomain_delegation_master_stack_name" {
