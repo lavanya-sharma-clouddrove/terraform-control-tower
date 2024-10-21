@@ -92,7 +92,7 @@ variable "access_analyzer_template_file" {
 
 variable "access_analyzer_stack_name" {
   type = string
-  default = "AccessAnalyzerStack"
+  default = "Access-Analyzer-Stack"
   description = "name of stack"
 }
 
