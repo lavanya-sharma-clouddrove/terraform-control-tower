@@ -126,7 +126,7 @@ variable "capabilities" {
 variable "detective_stack_name" {
     description = "The name of the CloudFormation stack"
   type = string
-  default = "ct_detective_name"
+  default = "ct-detective-name"
 }
 variable "enable_detective" {
   type = bool
@@ -154,7 +154,7 @@ description = "s3 template file url"
 variable "guardduty_stack_name" {
     description = "Name of the CloudFormation Stack"
   type = string
-  default = "ct_guardduty"
+  default = "ct-guardduty"
 }
 variable "guardduty_template_file" {
     description = "URL of the CloudFormation template"
@@ -169,7 +169,7 @@ variable "administration_role_arn" {
 variable "execution_role_name" {
     description = "Name of the execution role for the StackSet"
   type = string
-  default = "AWSControlTowerExecution "
+  default = "AWSControlTowerExecution"
 }
 variable "security_account_id" {
     description = "Security account ID"
@@ -179,7 +179,7 @@ variable "security_account_id" {
 variable "guardduty_s3_source_file" {
     description = "S3 bucket where the source files are stored"
   type = string
-  default ="guardduty/guardduty_enabler.zip "
+  default ="guardduty/guardduty_enabler.zip"
 }
 variable "guardduty_compliance_frequency" {
     description = "Frequency of compliance checks"
@@ -192,7 +192,7 @@ variable "guardduty_region_filter" {
   default = ""
 }
 variable "guardduty_stack_instance_region" {
-  description = "region in which you want to deploy "
+  description = "region in which you want to deploy"
   type = string
   default = "us-east-1"
 }
@@ -206,7 +206,7 @@ variable "enable_guardduty" {
 variable "inspector_stack_name" {
    description = "Name of the CloudFormation StackSet"
   type = string
-  default = "ct_inspector"
+  default = "ct-inspector"
 }
 variable "inspector_lambda_file" {
   description = "path of the CloudFormation lambda file (lambda code zip file path)"
@@ -231,7 +231,7 @@ variable "inspector_account_id" {
 #--------security-hub-----------
 variable "security_hub_stack_name" {
   type = string
-  default = "ct_security_hub"
+  default = "ct-security-hub"
    description = "Name of the CloudFormation stack"
 }
 variable "security_hub_template_url" {
@@ -303,7 +303,7 @@ variable "enable_config" {
 }
 variable "config_stack_name" {
   type = string
-  default = "ctconfig"
+  default = "ct-config"
   description = "name of stack for config"
 }
 variable "config_template_url" {
@@ -330,7 +330,7 @@ variable "enable_inspection_lambda" {
 }
 variable "inspection_stack_name" {
   type = string
-  default = "ct_inspection_lambda"
+  default = "ct-inspection-lambda"
   description = "name of inspection lambda stack"
 }
 variable "inspection_destination_bucket_name" {
@@ -420,7 +420,7 @@ variable "subdomain_delegation_domain_name" {
 variable "subdomain_delegation_master_account_id" {
   type = string
   default = ""
-  description = "subdomain delegation master account id "
+  description = "subdomain delegation master account id"
 }
 variable "enable_subdomain_delegation_master" {
   type = bool
