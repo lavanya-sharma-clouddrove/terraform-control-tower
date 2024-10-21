@@ -140,9 +140,9 @@ variable "detective_lambda_file" {
 
 }
 variable "excluded_accounts" {
-   description = "Excluded Accounts list. This list should contain Management account, Log Archive and Audit accounts at the minimum"
-  default = ""
-  type        = string
+   description = "Accounts to be excluded from the guardduty"
+  type        = list(string) 
+  default     = ["637423606344", "123456789012", "987654321098"]
 }
 variable "detective_template_file" {
 description = "s3 template file url"
