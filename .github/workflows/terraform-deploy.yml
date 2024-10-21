@@ -110,7 +110,7 @@ jobs:
             -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
             -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}" \
             -var "MacieMasterAccountId=${{ secrets.MASTER_ACCOUNT_ID }}" \
-            -var "access_analyzer_template_file=${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}
+            -var "access_analyzer_template_file=${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}"
 
       # Step 7: Check Terraform Plan result
       - name: Check Plan Result
@@ -141,7 +141,7 @@ jobs:
             -var "config_template_url=${{ secrets.CONFIG_TEMPLATE_URL }}" \
             -var "macie_template_url=${{ secrets.MACIE_TEMPLATE_URL }}"  \
             -var "MacieMasterAccountId=${{ secrets.MASTER_ACCOUNT_ID }}" \ 
-            -var "access_analyzer_template_file=${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}
+            -var "access_analyzer_template_file=${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}"
 
       # Step 9: Output Terraform results
       - name: Terraform Output
