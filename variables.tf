@@ -139,7 +139,7 @@ variable "detective_lambda_file" {
   default = "detective/detective.zip"
 
 }
-variable "excluded_accounts" {
+variable "detective_excluded_accounts" {
    description = "Accounts to be excluded from the guardduty"
   type        = list(string) 
   default     = ["637423606344", "123456789012", "987654321098"]
