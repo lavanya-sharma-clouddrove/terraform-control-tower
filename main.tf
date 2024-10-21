@@ -57,7 +57,7 @@ resource "aws_cloudformation_stack_set" "detective_stackset" {
     S3SourceBucket           = var.template_bucket_name
     S3Key                    = var.detective_lambda_file
     RoleToAssume             = var.role_to_assume
-    ExcludedAccounts             =join(",", var.detective_excluded_accounts) 
+    ExcludedAccounts             =join(",", var.excluded_accounts) 
   }
 
   capabilities = var.capabilities
