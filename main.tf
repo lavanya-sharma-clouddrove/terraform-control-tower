@@ -102,7 +102,7 @@ resource "aws_cloudformation_stack_set" "inspector_stackset" {
     S3SourceBucket         = var.template_bucket_name
     S3Key                  = var.inspector_lambda_file    
     RoleToAssume           = var.role_to_assume
-    ExcludedAccounts       = var.excluded_accounts
+    ExcludedAccounts             =join(",", var.access_analyzer_excluded_accounts)
   }
 
   capabilities = var.capabilities
@@ -124,7 +124,7 @@ resource "aws_cloudformation_stack" "security_hub_stack" {
 
   parameters = {
     SecurityAccountId   = var.security_account_id
-    ExcludedAccounts    = var.excluded_accounts
+    ExcludedAccounts    = join(",", var.access_analyzer_excluded_accounts)
     OrganizationId      = data.aws_organizations_organization.organization.id
     RegionFilter        = var.security_hub_region_filter
     OUFilter            = var.security_hub_ou_filter
@@ -150,7 +150,7 @@ resource "aws_cloudformation_stack" "config_stack" {
   template_url            = var.config_template_url
 
   parameters = {
-    ExcludedAccounts                   = var.excluded_accounts
+    ExcludedAccounts             =join(",", var.access_analyzer_excluded_accounts)
     ConfigRecorderExcludedResourceTypes = var.ConfigRecorderExcludedResourceTypes
     CloudFormationVersion              = var.cloudformation_version
     S3SourceBucket                     = var.template_bucket_name
