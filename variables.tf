@@ -97,9 +97,9 @@ variable "access_analyzer_stack_name" {
 }
 
 variable "access_analyzer_excluded_accounts" {
-    description = "Accounts to be excluded from the Access Analyzer"
-  type        = string
-  default     = "637423606344"
+  description = "Accounts to be excluded from the Access Analyzer"
+  type        = list(string) 
+  default     = ["637423606344", "123456789012", "987654321098"]
 }
 
 variable "access_analyzer_lambda_file" {
