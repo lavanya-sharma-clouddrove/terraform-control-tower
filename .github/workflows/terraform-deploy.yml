@@ -97,6 +97,7 @@ jobs:
         id: plan
         run: |
           terraform plan \
+            -out=tfplan \
             -var "enable_access_analyzer=${{ github.event.inputs.enable_access_analyzer }}" \
             -var "enable_guardduty=${{ github.event.inputs.enable_guardduty }}" \
             -var "enable_security_hub=${{ github.event.inputs.enable_security_hub }}" \
@@ -125,7 +126,7 @@ jobs:
       - name: Apply Terraform (manual approval required)
         if: ${{ github.event.inputs.confirm_apply == 'true' }}  # Only apply if 'true'
         run: | 
-          terraform apply -auto-approve \
+          terraform apply -auto-approve tfplan\
             -var "enable_access_analyzer=${{ github.event.inputs.enable_access_analyzer }}" \
             -var "enable_guardduty=${{ github.event.inputs.enable_guardduty }}" \
             -var "enable_security_hub=${{ github.event.inputs.enable_security_hub }}" \
