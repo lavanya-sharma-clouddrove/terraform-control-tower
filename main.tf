@@ -26,7 +26,7 @@ resource "aws_cloudformation_stack_set" "access_analyzer_stackset" {
   parameters = {
     OrganizationId               = data.aws_organizations_organization.organization.id
     AccessAnalyserMasterAccountId = var.delegated_account_id
-    ExcludedAccounts             = var.access_analyzer_excluded_accounts
+    ExcludedAccounts             =join(",", var.access_analyzer_excluded_accounts) 
     S3SourceBucket               = var.template_bucket_name
     S3Key                        = var.access_analyzer_lambda_file
     RoleToAssume                 = var.role_to_assume
