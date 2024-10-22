@@ -44,7 +44,7 @@ on:
         required: true
         default: 'false'
         type: boolean
-      enable_notification_webhook :
+      enable_notification_webhook:
         description: 'Enable notification webhook Stack'
         required: true
         default: 'false'
@@ -59,13 +59,16 @@ jobs:
   deploy:
     name: Deploy Terraform
     runs-on: ubuntu-latest
-
+    
+    env:
+      TERRAFORM_VERSION: "1.6.6"  # Updated to a more recent stable version
+      
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Debug input values (before initializing Terraform)
+      # Step 2: Debug input values
       - name: Debug Terraform Inputs
         run: |
           echo "Enable Access Analyzer: ${{ github.event.inputs.enable_access_analyzer }}"
@@ -83,7 +86,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.9.8  # Specify your desired version
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       # Step 4: Configure AWS credentials
       - name: Configure AWS credentials
@@ -96,13 +99,20 @@ jobs:
 
       # Step 5: Initialize Terraform
       - name: Initialize Terraform
-        run: terraform init
+        run: |
+          terraform init -input=false
 
-      # Step 6: Terraform Plan
+      # Step 6: Terraform Format Check (optional but recommended)
+      - name: Terraform Format Check
+        run: |
+          terraform fmt -check -recursive
+
+      # Step 7: Terraform Plan
       - name: Terraform Plan
         id: plan
         run: |
           terraform plan \
+            -input=false \
             -out=tfplan \
             -var "enable_access_analyzer=${{ github.event.inputs.enable_access_analyzer }}" \
             -var "enable_detective=${{ github.event.inputs.enable_detective }}" \
@@ -122,34 +132,55 @@ jobs:
             -var "detective_template_file=${{ secrets.DETECTIVE_TEMPLATE_FILE }}" \
             -var "guardduty_template_file=${{ secrets.GUARDDUTY_TEMPLATE_FILE }}" \
             -var "inspector_template_file=${{ secrets.INSPECTOR_TEMPLATE_FILE }}" \
-            -var "security_hub_template_file=${{ secrets.SECURITY_HUB_TEMPLATE_URL }}" \ 
+            -var "security_hub_template_file=${{ secrets.SECURITY_HUB_TEMPLATE_URL }}" \
             -var "config_template_file=${{ secrets.CONFIG_TEMPLATE_URL }}" \
             -var "inspection_lambda_template_file=${{ secrets.INSPECTION_LAMBDA_TEMPLATE_URL }}" \
             -var "macie_template_file=${{ secrets.MACIE_TEMPLATE_URL }}" \
             -var "notification_webhook_template_file=${{ secrets.NOTIFICATION_WEBHOOK_URL }}" \
             -var "webhook_url=${{ secrets.WEBHOOK_URL }}"
 
-      # Step 7: Check Terraform Plan result
-      - name: Check Plan Result
+      # Step 8: Show Plan
+      - name: Show Plan
         run: |
-          if terraform show -json | jq -e '.planned_values.root_module.resources | length > 0'; then
-            echo "Plan successful! Resources will be created."
+          echo "Terraform Plan Output:"
+          terraform show -no-color tfplan
+
+      # Step 9: Plan Status
+      - name: Check Plan Status
+        id: plan-status
+        run: |
+          if terraform show -json tfplan | jq -e '.planned_values.root_module.resources | length > 0'; then
+            echo "Changes detected in the plan"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
           else
-            echo "Plan successful but no changes detected."
+            echo "No changes detected in the plan"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
           fi
 
-      # Step 8: Apply Terraform (manual approval required)
-      - name: Apply Terraform (manual approval required)
-        if: ${{ github.event.inputs.confirm_apply == 'true' }}  # Only apply if 'true'
-        run: | 
+      # Step 10: Apply Terraform (only if confirm_apply is true and there are changes)
+      - name: Apply Terraform
+        if: github.event.inputs.confirm_apply == 'true' && steps.plan-status.outputs.has_changes == 'true'
+        run: |
           terraform apply -auto-approve tfplan
 
-      # Step 9: Output Terraform results
+      # Step 11: Terraform Output (only if apply was executed)
       - name: Terraform Output
-        run: terraform output
+        if: github.event.inputs.confirm_apply == 'true' && steps.plan-status.outputs.has_changes == 'true'
+        run: |
+          terraform output
 
-      # Step 10: Handle errors (Optional, for better debugging)
-      - name: Handle errors
+      # Step 12: Error Handler
+      - name: Error Handler
         if: failure()
         run: |
-          echo "Terraform apply failed. Please check the logs for details."
+          echo "::error::Terraform deployment failed. Check the logs above for detailed error messages."
+          echo "Common issues to check:"
+          echo "1. AWS credentials and permissions"
+          echo "2. Terraform state configuration"
+          echo "3. Variable values and secret availability"
+          echo "4. Resource constraints or service quotas"
+          exit 1
+
+permissions:
+  contents: read
+  id-token: write
