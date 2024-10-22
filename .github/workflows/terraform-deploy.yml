@@ -114,6 +114,7 @@ jobs:
             -var "enable_macie=${{ github.event.inputs.enable_macie }}" \
             -var "region=${{ secrets.AWS_REGION }}" \
             -var "delegated_account_id=${{ secrets.DELEGATED_ACCOUNT_ID }}" \
+            -var "inspector_account_id=${{ secrets.INSPECTOR_ACCOUNT_ID }}" \
             -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
             -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}" \
             -var "MacieMasterAccountId=${{ secrets.MASTER_ACCOUNT_ID }}" \
@@ -125,7 +126,8 @@ jobs:
             -var "config_template_file=${{ secrets.CONFIG_TEMPLATE_URL }}" \
             -var "inspection_lambda_template_file=${{ secrets.INSPECTION_LAMBDA_TEMPLATE_URL }}" \
             -var "macie_template_file=${{ secrets.MACIE_TEMPLATE_URL }}" \
-            -var "notification_webhook_template_file=${{ secrets.NOTIFICATION_WEBHOOK_URL }}"
+            -var "notification_webhook_template_file=${{ secrets.NOTIFICATION_WEBHOOK_URL }}" \
+            -var "webhook_url=${{ secrets.WEBHOOK_URL }}
 
       # Step 7: Check Terraform Plan result
       - name: Check Plan Result
