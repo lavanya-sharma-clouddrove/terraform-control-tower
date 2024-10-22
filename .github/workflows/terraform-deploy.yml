@@ -111,7 +111,7 @@ jobs:
             -var "enable_security_hub=${{ github.event.inputs.enable_security_hub }}" \
             -var "enable_config=${{ github.event.inputs.enable_config }}" \
             -var "enable_inspection_lambda=${{ github.event.inputs.enable_inspection_lambda }}" \
-            -var "enable_macie=${{ github.event.inputs.enable_macie }}"
+            -var "enable_macie=${{ github.event.inputs.enable_macie }}" 
 
       # Step 7: Check Terraform Plan result
       - name: Check Plan Result
