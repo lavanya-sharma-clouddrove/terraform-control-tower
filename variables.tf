@@ -47,7 +47,7 @@ variable "tags" {
   type        = map(any)
   default     = {
     BusinessUnit = "XYZ"
-    Environment  = "Production"
+    Environment  = "Testing"
     Owner        = "lavanya"
   }
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
@@ -99,7 +99,7 @@ variable "access_analyzer_stack_name" {
 variable "access_analyzer_excluded_accounts" {
   description = "Accounts to be excluded from the Access Analyzer"
   type        = list(string) 
-  default     = ["637423606344", "123456789012", "987654321098"]
+  default     = ["637423606344", "123456789012"]
 }
 
 variable "access_analyzer_lambda_file" {
@@ -157,7 +157,7 @@ variable "guardduty_stack_name" {
   default = "ct-guardduty"
 }
 variable "guardduty_template_file" {
-    description = "URL of the CloudFormation template"
+  description = "URL of the CloudFormation template"
   type = string
   default = ""
 }
@@ -225,7 +225,7 @@ variable "enable_inspector" {
 }
 variable "inspector_account_id" {
   type = string
-  default = "924144197303"
+  default = ""
 }
 
 #--------security-hub-----------
@@ -461,6 +461,6 @@ variable "notification_webhook_rule_filter" {
 }
 variable "notification_webhook_s3_key" {
   type = string
-  default = "notification-webhook//aws-control-tower-webhook-notifications.zip"
+  default = "notification-webhook/aws-control-tower-webhook-notifications.zip"
   description  = "path for lambda zip file in bucket (lambda code zip file path)"
 }
