@@ -9,13 +9,13 @@ on:
         required: true
         default: 'false'
         type: boolean
-      enable_guardduty:
-        description: 'Enable GuardDuty Stack'
+      enable_detective:
+        description: 'Enable detective Stack'
         required: true
         default: 'false'
         type: boolean
-      enable_security_hub:
-        description: 'Enable Security Hub Stack'
+      enable_guardduty:
+        description: 'Enable GuardDuty Stack'
         required: true
         default: 'false'
         type: boolean
@@ -24,8 +24,8 @@ on:
         required: true
         default: 'false'
         type: boolean
-      enable_detective:
-        description: 'Enable detective Stack'
+      enable_security_hub:
+        description: 'Enable Security Hub Stack'
         required: true
         default: 'false'
         type: boolean
@@ -41,6 +41,11 @@ on:
         type: boolean
       enable_macie:
         description: 'Enable Macie Stack'
+        required: true
+        default: 'false'
+        type: boolean
+      enable_notification_webhook :
+        description: 'Enable notification webhook Stack'
         required: true
         default: 'false'
         type: boolean
@@ -64,13 +69,14 @@ jobs:
       - name: Debug Terraform Inputs
         run: |
           echo "Enable Access Analyzer: ${{ github.event.inputs.enable_access_analyzer }}"
+          echo "Enable detective: ${{ github.event.inputs.enable_detective }}"
           echo "Enable GuardDuty: ${{ github.event.inputs.enable_guardduty }}"
-          echo "Enable Security Hub: ${{ github.event.inputs.enable_security_hub }}"
           echo "Enable Inspector: ${{ github.event.inputs.enable_inspector }}"
+          echo "Enable Security Hub: ${{ github.event.inputs.enable_security_hub }}"
           echo "Enable Config: ${{ github.event.inputs.enable_config }}"
           echo "Enable Inspection Lambda: ${{ github.event.inputs.enable_inspection_lambda }}"
           echo "Enable Macie: ${{ github.event.inputs.enable_macie }}"
-          echo "Enable detective: ${{ github.event.inputs.enable_detective }}"
+          echo "Enable Notification Webhook: ${{ github.event.inputs.enable_notification_webhook }}"
           echo "Region: ${{ secrets.AWS_REGION }}"
 
       # Step 3: Set up Terraform
@@ -99,20 +105,27 @@ jobs:
           terraform plan \
             -out=tfplan \
             -var "enable_access_analyzer=${{ github.event.inputs.enable_access_analyzer }}" \
+            -var "enable_detective=${{ github.event.inputs.enable_detective }}" \
             -var "enable_guardduty=${{ github.event.inputs.enable_guardduty }}" \
-            -var "enable_security_hub=${{ github.event.inputs.enable_security_hub }}" \
             -var "enable_inspector=${{ github.event.inputs.enable_inspector }}" \
+            -var "enable_security_hub=${{ github.event.inputs.enable_security_hub }}" \
             -var "enable_config=${{ github.event.inputs.enable_config }}" \
             -var "enable_inspection_lambda=${{ github.event.inputs.enable_inspection_lambda }}" \
             -var "enable_macie=${{ github.event.inputs.enable_macie }}" \
-            -var "enable_detective=${{ github.event.inputs.enable_detective }}" \
             -var "region=${{ secrets.AWS_REGION }}" \
             -var "delegated_account_id=${{ secrets.DELEGATED_ACCOUNT_ID }}" \
             -var "template_bucket_name=${{ secrets.TEMPLATE_BUCKET_NAME }}" \
             -var "role_to_assume=${{ secrets.ROLE_TO_ASSUME }}" \
             -var "MacieMasterAccountId=${{ secrets.MASTER_ACCOUNT_ID }}" \
             -var "access_analyzer_template_file=${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}" \
-            -var "detective_template_file=${{ secrets.DETECTIVE_TEMPLATE_FILE }}"
+            -var "detective_template_file=${{ secrets.DETECTIVE_TEMPLATE_FILE }}" \
+            -var "guardduty_template_file=${{ secrets.GUARDDUTY_TEMPLATE_FILE }}" \
+            -var "inspector_template_file=${{ secrets.INSPECTOR_TEMPLATE_FILE }}" \
+            -var "security_hub_template_file=${{ secrets.SECURITY_HUB_TEMPLATE_URL }}" \ 
+            -var "config_template_file=${{ secrets.CONFIG_TEMPLATE_URL }}" \
+            -var "inspection_lambda_template_file=${{ secrets.INSPECTION_LAMBDA_TEMPLATE_URL }}" \
+            -var "macie_template_file=${{ secrets.MACIE_TEMPLATE_URL }}" \
+            -var "notification_webhook_template_file=${{ secrets.NOTIFICATION_WEBHOOK_URL }}"
 
       # Step 7: Check Terraform Plan result
       - name: Check Plan Result
