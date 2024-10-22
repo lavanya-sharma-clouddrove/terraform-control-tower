@@ -127,7 +127,7 @@ jobs:
             -var "inspection_lambda_template_file=${{ secrets.INSPECTION_LAMBDA_TEMPLATE_URL }}" \
             -var "macie_template_file=${{ secrets.MACIE_TEMPLATE_URL }}" \
             -var "notification_webhook_template_file=${{ secrets.NOTIFICATION_WEBHOOK_URL }}" \
-            -var "webhook_url=${{ secrets.WEBHOOK_URL }}
+            -var "webhook_url=${{ secrets.WEBHOOK_URL }}"
 
       # Step 7: Check Terraform Plan result
       - name: Check Plan Result
