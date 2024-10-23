@@ -22,7 +22,7 @@ on:
       ACCOUNTS:
         description: "Comma-separated AWS account IDs for the stack set (if DELETE_STACK_SET is checked)"
         required: false
-      REGION:
+      AWS_REGION:
         description: "AWS region to operate in"
         default: "us-east-1"
 
