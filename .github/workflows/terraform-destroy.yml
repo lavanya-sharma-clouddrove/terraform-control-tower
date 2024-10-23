@@ -69,7 +69,7 @@ jobs:
               --stack-set-name "$stack_set_name" \
               --regions "$region" \
               --accounts $accounts \
-              --retain-stacks  \
+              --retain-stacks \
               --operation-preferences FailureToleranceCount=0,MaxConcurrentCount=1 \
               --query 'OperationId' --output text)
 
@@ -91,7 +91,7 @@ jobs:
         STACK_NAME="${{ github.event.inputs.STACK_NAME }}"
         STACK_SET_NAME="${{ github.event.inputs.STACK_SET_NAME }}"
         ACCOUNTS="${{ github.event.inputs.ACCOUNTS }}"
-        REGION="${{ github.event.inputs.REGION }}"
+        REGION="${{ github.event.inputs.AWS_REGION }}"
 
         # Conditional logic based on user input
         if [ "$DELETE_STACK" = "true" ]; then
