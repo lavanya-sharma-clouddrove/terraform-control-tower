@@ -81,8 +81,23 @@ jobs:
               --stack-set-name "$stack_set_name" \
               --operation-id "$operation_id"
 
-          echo "Stack instances for $stack_set_name deleted successfully."
+          echo "Checking if stack instances for $stack_set_name are deleted..."
+          while true; do
+            # Get the list of stack instances
+            stack_instances=$(aws cloudformation list-stack-instances \
+                --stack-set-name "$stack_set_name" \
+                --query 'Summaries[*].StackInstanceStatus' --output text)
 
+            if [ -z "$stack_instances" ]; then
+              echo "All stack instances deleted successfully."
+              break
+            else
+              echo "Stack instances still exist: $stack_instances. Waiting..."
+              sleep 10
+            fi
+          done
+
+          # Now delete the stack set after ensuring all instances are deleted
           echo "Deleting stack set: $stack_set_name"
           aws cloudformation delete-stack-set --stack-set-name "$stack_set_name"
           echo "Stack set $stack_set_name deleted successfully."
