@@ -86,7 +86,7 @@ variable "enable_access_analyzer" {
 
 variable "access_analyzer_template_file" {
   type        = string
-  default     = ""
+  default     = "https://control-tower-lavanya.s3.us-east-1.amazonaws.com/access-analyser/access-analyser.yaml"
     description = "URL of the CloudFormation template"
 }
 
