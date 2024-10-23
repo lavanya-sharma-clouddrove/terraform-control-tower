@@ -75,9 +75,12 @@ jobs:
 
           echo "Operation ID: $operation_id"
 
-          # Wait for the stack instances deletion to complete
-          echo "Waiting for stack instances deletion..."
-          aws cloudformation wait stack-set-instances-deleted --stack-set-name "$stack_set_name" --operation-id "$operation_id"
+          # Wait for the stack set operation to complete
+          echo "Waiting for stack set operation to complete..."
+          aws cloudformation wait stack-set-operation-complete \
+              --stack-set-name "$stack_set_name" \
+              --operation-id "$operation_id"
+
           echo "Stack instances for $stack_set_name deleted successfully."
 
           echo "Deleting stack set: $stack_set_name"
