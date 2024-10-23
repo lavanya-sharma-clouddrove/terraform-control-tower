@@ -105,7 +105,7 @@ variable "access_analyzer_excluded_accounts" {
 variable "access_analyzer_lambda_file" {
   description = "lambda file path (lambda code zip file path) from s3"
   type        = string
-  default     = "access-analyser/access-analyser.zip"
+  default     = "access-analyser/cfresponse.zip"
 }
 
 variable "role_to_assume" {
