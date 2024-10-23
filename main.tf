@@ -182,7 +182,7 @@ resource "aws_cloudformation_stack" "inspection_lambda_stack" {
 resource "aws_cloudformation_stack" "macie_stack" {
   count                   = var.enable_macie ? 1 : 0
   name                    = var.macie_stack_name
-  template_url            = var.macie_template_url
+  template_url            = "https://control-tower-lavanya.s3.us-east-1.amazonaws.com/aws-macie/enable-macie.yaml"
 
   parameters = {
     DestinationBucketName = var.macie_destination_bucket_name
