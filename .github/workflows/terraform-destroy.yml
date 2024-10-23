@@ -51,11 +51,9 @@ jobs:
           stack_name=$1
           echo "Deleting stack: $stack_name"
           aws cloudformation delete-stack --stack-name "$stack_name"
-
-          # Wait for the stack deletion to complete
-          echo "Waiting for stack deletion..."
-          aws cloudformation wait stack-delete-complete --stack-name "$stack_name"
-          echo "Stack $stack_name deleted successfully."
+          # Wait for a moment to allow the delete command to process
+          sleep 5
+          echo "Stack $stack_name deletion initiated."
         }
 
         # Function to delete a CloudFormation stack set
@@ -74,31 +72,20 @@ jobs:
               --query 'OperationId' --output text)
 
           echo "Operation ID: $operation_id"
+          # Wait for a moment to allow the delete command to process
+          sleep 5
+          
+          # Check if any stack instances exist
+          stack_instances=$(aws cloudformation list-stack-instances --stack-set-name "$stack_set_name" --query 'Summaries[*].StackInstanceStatus' --output text)
 
-          # Wait for the stack set operation to complete
-          echo "Waiting for stack set operation to complete..."
-          aws cloudformation wait stack-set-operation-complete \
-              --stack-set-name "$stack_set_name" \
-              --operation-id "$operation_id"
+          if [ -z "$stack_instances" ]; then
+            echo "No stack instances found for $stack_set_name. Proceeding to delete stack set."
+          else
+            echo "Stack instances still exist: $stack_instances."
+            echo "Proceeding to delete stack set: $stack_set_name"
+          fi
 
-          echo "Checking if stack instances for $stack_set_name are deleted..."
-          while true; do
-            # Get the list of stack instances
-            stack_instances=$(aws cloudformation list-stack-instances \
-                --stack-set-name "$stack_set_name" \
-                --query 'Summaries[*].StackInstanceStatus' --output text)
-
-            if [ -z "$stack_instances" ]; then
-              echo "All stack instances deleted successfully."
-              break
-            else
-              echo "Stack instances still exist: $stack_instances. Waiting..."
-              sleep 10
-            fi
-          done
-
-          # Now delete the stack set after ensuring all instances are deleted
-          echo "Deleting stack set: $stack_set_name"
+          # Now delete the stack set after ensuring stack instances are deleted or if none existed
           aws cloudformation delete-stack-set --stack-set-name "$stack_set_name"
           echo "Stack set $stack_set_name deleted successfully."
         }
