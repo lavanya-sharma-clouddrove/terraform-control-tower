@@ -362,7 +362,7 @@ variable "macie_stack_name" {
 }
 variable "macie_template_url" {
   type = string
-  default = "${{ secrets.MACIE_TEMPLATE_URL }}"
+  default = ""
   description = "template file url for macie"
 }
 variable "macie_destination_bucket_name" {
