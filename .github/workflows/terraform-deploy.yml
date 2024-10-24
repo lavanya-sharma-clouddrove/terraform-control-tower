@@ -111,10 +111,8 @@ jobs:
           TF_VAR_enable_macie: ${{ github.event.inputs.enable_macie }}
           TF_VAR_region: ${{ secrets.AWS_REGION }}
           TF_VAR_delegated_account_id: ${{ secrets.DELEGATED_ACCOUNT_ID }}
-          TF_VAR_inspector_account_id: ${{ secrets.INSPECTOR_ACCOUNT_ID }}
           TF_VAR_template_bucket_name: ${{ secrets.TEMPLATE_BUCKET_NAME }}
           TF_VAR_role_to_assume: ${{ secrets.ROLE_TO_ASSUME }}
-          TF_VAR_MacieMasterAccountId: ${{ secrets.MASTER_ACCOUNT_ID }}
           TF_VAR_access_analyzer_template_file: ${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}
           TF_VAR_detective_template_file: ${{ secrets.DETECTIVE_TEMPLATE_FILE }}
           TF_VAR_guardduty_template_file: ${{ secrets.GUARDDUTY_TEMPLATE_FILE }}
