@@ -113,16 +113,17 @@ jobs:
           TF_VAR_delegated_account_id: ${{ secrets.DELEGATED_ACCOUNT_ID }}
           TF_VAR_template_bucket_name: ${{ secrets.TEMPLATE_BUCKET_NAME }}
           TF_VAR_role_to_assume: ${{ secrets.ROLE_TO_ASSUME }}
-          TF_VAR_access_analyzer_template_file: ${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}
-          TF_VAR_detective_template_file: ${{ secrets.DETECTIVE_TEMPLATE_FILE }}
-          TF_VAR_guardduty_template_file: ${{ secrets.GUARDDUTY_TEMPLATE_FILE }}
-          TF_VAR_inspector_template_file: ${{ secrets.INSPECTOR_TEMPLATE_FILE }}
-          TF_VAR_security_hub_template_file: ${{ secrets.SECURITY_HUB_TEMPLATE_URL }}
-          TF_VAR_config_template_file: ${{ secrets.CONFIG_TEMPLATE_URL }}
-          TF_VAR_inspection_lambda_template_file: ${{ secrets.INSPECTION_LAMBDA_TEMPLATE_URL }}
-          TF_VAR_macie_template_file: ${{ secrets.MACIE_TEMPLATE_URL }}
-          TF_VAR_notification_webhook_template_file: ${{ secrets.NOTIFICATION_WEBHOOK_URL }}
+          TF_VAR_access_analyzer_template_file_s3_object_url: ${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}
+          TF_VAR_detective_template_file_s3_object_url: ${{ secrets.DETECTIVE_TEMPLATE_FILE }}
+          TF_VAR_guardduty_template_file_s3_object_url: ${{ secrets.GUARDDUTY_TEMPLATE_FILE }}
+          TF_VAR_inspector_template_file_s3_object_url: ${{ secrets.INSPECTOR_TEMPLATE_FILE }}
+          TF_VAR_security_hub_template_file_s3_object_url: ${{ secrets.SECURITY_HUB_TEMPLATE_URL }}
+          TF_VAR_config_template_file_s3_object_url: ${{ secrets.CONFIG_TEMPLATE_URL }}
+          TF_VAR_inspection_lambda_template_file_s3_object_url: ${{ secrets.INSPECTION_LAMBDA_TEMPLATE_URL }}
+          TF_VAR_macie_template_file_s3_object_url: ${{ secrets.MACIE_TEMPLATE_URL }}
+          TF_VAR_notification_webhook_template_file_s3_object_url: ${{ secrets.NOTIFICATION_WEBHOOK_URL }}
           TF_VAR_webhook_url: ${{ secrets.WEBHOOK_URL }}
+          TF_VAR_excluded_accounts: ${{ secrets.EXCLUDED_ACCOUNTS }}
 
         run: terraform plan -out=tfplan
 
