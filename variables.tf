@@ -17,7 +17,7 @@ variable "region" {
 }
 variable "repository" {
   type        = string
-  default     = ""
+  default     = "https://github.com/clouddrove/aws-control-tower-architecture"
   description = "Terraform current module repo"
 
   validation {
