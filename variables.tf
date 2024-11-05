@@ -510,12 +510,6 @@ variable "pMemberBackupVaultName" {
   description = "path for lambda zip file in bucket (lambda code zip file path)"
 }
 
-variable "enable_inspector" {
-  description = "enable true if you want to create stackset for inspector else false"
-  type        = bool
-  default     = false
-}
-
 variable "enable_central_backup_account" {
   description = "enable true if you want to create stackset for inspector else false"
   type        = bool
