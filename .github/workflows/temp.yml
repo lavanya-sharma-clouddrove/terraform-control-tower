@@ -5,6 +5,90 @@ on:
       services:
         description: 'Specify the services to deploy (access-analyser, guard-duty, inspector, macie, securityhub, detective, config, inspection-lambda, hostedzone-master). Use a comma to separate multiple services.'
         required: true
+      confirm_apply:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-1:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-2:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-3:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-4:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-5:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-6:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-7:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-8:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-9:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-10:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply-11:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
 
 permissions:
   id-token: write
@@ -119,7 +203,7 @@ jobs:
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
       account-ids: ${{ secrets.ACCOUNT_IDS }}
       administration-role-arn: ${{ secrets.ADMIN_ROLE_ARN }}
-      parameter-overrides: ParameterKey=OrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }} ParameterKey=SecurityAccountId,ParameterValue=${{ secrets.MASTER_ACCOUNT_ID }} ParameterKey=S3SourceBucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=S3SourceKey,ParameterValue=${{ secrets.SECURITYHUB_KEY }} ParameterKey=ExcludedAccounts,ParameterValue=${{ secrets.EXCLUDED_ACCOUNT_ID }}
+      parameter-overrides: ParameterKey=OrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }} ParameterKey=SecurityAccountId,ParameterValue=${{ secrets.MASTER_ACCOUNT_ID }} ParameterKey=S3SourceBucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=S3SourceFile,ParameterValue=${{ secrets.SECURITYHUB_KEY }} ParameterKey=ExcludedAccounts,ParameterValue=${{ secrets.EXCLUDED_ACCOUNT_ID }}
 
   Detective:
     needs: validate-services
@@ -128,7 +212,7 @@ jobs:
     with:
       aws-region: us-east-1
       stackset-instance-region: us-east-1
-      stack-set-name: detective
+      stack-set-name: Detective
       template-url: 'https://isocrates-control-tower-cloudformation-template.s3.amazonaws.com/detective/detective.yaml'
       permission-model: SELF_MANAGED
       auto-deployment-enabled: false
@@ -138,17 +222,17 @@ jobs:
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
       account-ids: ${{ secrets.ACCOUNT_IDS }}
       administration-role-arn: ${{ secrets.ADMIN_ROLE_ARN }}
-      parameter-overrides: ParameterKey=DetectiveMasterAccountId,ParameterValue=${{ secrets.MASTER_ACCOUNT_ID }} ParameterKey=OrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }}  ParameterKey=S3SourceBucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=S3Key,ParameterValue=${{ secrets.DETECTIVE_KEY }} ParameterKey=ExcludedAccounts,ParameterValue=${{ secrets.EXCLUDED_ACCOUNT_ID }}
+      parameter-overrides: ParameterKey=OrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }} ParameterKey=DetectiveMasterAccountId,ParameterValue=${{ secrets.MASTER_ACCOUNT_ID }} ParameterKey=S3SourceBucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=S3Key,ParameterValue=${{ secrets.DETECTIVE_KEY }} ParameterKey=ExcludedAccounts,ParameterValue=${{ secrets.EXCLUDED_ACCOUNT_ID }}
 
-  Aws-Config:
+  Config:
     needs: validate-services
     if: contains(needs.validate-services.outputs.services, 'config')
     uses: ./.github/workflows/sharedworkflow_deploy-cloudformation-stackset.yml
     with:
       aws-region: us-east-1
       stackset-instance-region: us-east-1
-      stack-set-name: Aws-Config
-      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.amazonaws.com/config/aws-config-template.yaml'
+      stack-set-name: Config
+      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.amazonaws.com/aws-config/aws-config.yaml'
       permission-model: SELF_MANAGED
       auto-deployment-enabled: false
       RetainStacksOnAccountRemoval: false
@@ -157,17 +241,17 @@ jobs:
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
       account-ids: ${{ secrets.ACCOUNT_IDS }}
       administration-role-arn: ${{ secrets.ADMIN_ROLE_ARN }}
-      parameter-overrides: ParameterKey=S3SourceBucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=ExcludedAccounts,ParameterValue=${{ secrets.EXCLUDED_ACCOUNT_ID }}
+      parameter-overrides: ParameterKey=OrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }} ParameterKey=ConfigMasterAccountId,ParameterValue=${{ secrets.MASTER_ACCOUNT_ID }} ParameterKey=S3SourceBucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=S3Key,ParameterValue=${{ secrets.CONFIG_KEY }} ParameterKey=ExcludedAccounts,ParameterValue=${{ secrets.EXCLUDED_ACCOUNT_ID }}
 
-  Inspection-Lmabda:
+  InspectionLambda:
     needs: validate-services
     if: contains(needs.validate-services.outputs.services, 'inspection-lambda')
     uses: ./.github/workflows/sharedworkflow_deploy-cloudformation-stackset.yml
     with:
       aws-region: us-east-1
       stackset-instance-region: us-east-1
-      stack-set-name: Inspection-lambda
-      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.us-east-1.amazonaws.com/inspection-lambda/inspection.yaml'
+      stack-set-name: InspectionLambda
+      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.amazonaws.com/inspection-lambda/inspection-lambda.yaml'
       permission-model: SELF_MANAGED
       auto-deployment-enabled: false
       RetainStacksOnAccountRemoval: false
@@ -176,17 +260,17 @@ jobs:
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
       account-ids: ${{ secrets.ACCOUNT_IDS }}
       administration-role-arn: ${{ secrets.ADMIN_ROLE_ARN }}
-      parameter-overrides: ParameterKey=DestinationBucketName,ParameterValue=${{ secrets.DESTINATION_BUCKET_NAME }} ParameterKey=OrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }}  ParameterKey=S3SourceBucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=S3Key,ParameterValue=${{ secrets.INSPECTION_LAMBDA_KEY }} ParameterKey=ExcludedAccounts,ParameterValue=${{ secrets.EXCLUDED_ACCOUNT_ID }}
+      parameter-overrides: ParameterKey=OrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }} ParameterKey=InspectionLambdaMasterAccountId,ParameterValue=${{ secrets.MASTER_ACCOUNT_ID }} ParameterKey=S3SourceBucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=S3Key,ParameterValue=${{ secrets.INSPECTION_LAMBDA_KEY }} ParameterKey=ExcludedAccounts,ParameterValue=${{ secrets.EXCLUDED_ACCOUNT_ID }}
 
-  Subdomain-Delegation-Master:
+  HostedZoneMaster:
     needs: validate-services
     if: contains(needs.validate-services.outputs.services, 'hostedzone-master')
     uses: ./.github/workflows/sharedworkflow_deploy-cloudformation-stackset.yml
     with:
       aws-region: us-east-1
       stackset-instance-region: us-east-1
-      stack-set-name: hostedzonedelegation
-      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.us-east-1.amazonaws.com/hosted-zone-delegation/hosted-zone-delegation.yml'
+      stack-set-name: HostedZoneMaster
+      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.amazonaws.com/hostedzone-master/hostedzone-master.yaml'
       permission-model: SELF_MANAGED
       auto-deployment-enabled: false
       RetainStacksOnAccountRemoval: false
@@ -195,80 +279,4 @@ jobs:
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
       account-ids: ${{ secrets.ACCOUNT_IDS }}
       administration-role-arn: ${{ secrets.ADMIN_ROLE_ARN }}
-      parameter-overrides: ParameterKey=HostedZoneId,ParameterValue=${{ secrets.HostedZoneId }} ParameterKey=AuthorizedAccounts,ParameterValue=${{ secrets.AuthorizedAccounts }}  ParameterKey=S3Bucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=S3Key,ParameterValue=${{ secrets.hosted_zone_delegation_KEY }} 
-
-  Aws-backup-member-account-role:
-    needs: validate-services
-    if: contains(needs.validate-services.outputs.services, 'backup-role')
-    uses: ./.github/workflows/sharedworkflow_deploy-cloudformation-stackset.yml
-    with:
-      aws-region: us-east-1
-      stackset-instance-region: us-east-1
-      stack-set-name: awsbackup-member-accounts-role
-      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.us-east-1.amazonaws.com/aws-backup/aws-backup-member-account-iam-role.yaml' 
-      permission-model: SELF_MANAGED
-      auto-deployment-enabled: false
-      RetainStacksOnAccountRemoval: false
-      execution-role-name: AWSControlTowerExecution
-    secrets:
-      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
-      account-ids: ${{ secrets.ACCOUNT_IDS }}
-      administration-role-arn: ${{ secrets.ADMIN_ROLE_ARN }}
-      parameter-overrides: ParameterKey=pCrossAccountBackupRole,ParameterValue=${{ secrets.awsbackuprole }} ParameterKey=pTagKey1,ParameterValue=${{ secrets.pTagKey1 }} ParameterKey=pTagValue1,ParameterValue=${{ secrets.pTagValue1 }}
-
-  Aws-backup-member-account:
-    needs: validate-services
-    if: contains(needs.validate-services.outputs.services, 'beckup-member')
-    uses: ./.github/workflows/sharedworkflow_deploy-cloudformation-stackset.yml
-    with:
-      aws-region: us-east-1
-      stackset-instance-region: us-east-1
-      stack-set-name: awsbackup-member-accounts
-      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.amazonaws.com/detective/detective.yaml'
-      permission-model: SELF_MANAGED
-      auto-deployment-enabled: false
-      RetainStacksOnAccountRemoval: false
-      execution-role-name: AWSControlTowerExecution
-    secrets:
-      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
-      account-ids: ${{ secrets.ACCOUNT_IDS }}
-      administration-role-arn: ${{ secrets.ADMIN_ROLE_ARN }}
-      parameter-overrides: ParameterKey=pBackupKeyAlias,ParameterValue=${{ secrets.pBackupKeyAlias}} ParameterKey=pOrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }}  ParameterKey=pCrossAccountBackupRole,ParameterValue=${{ secrets.pCrossAccountBackupRole }} ParameterKey=pMemberBackupVaultName,ParameterValue=${{ secrets.pMemberBackupVaultName }} ParameterKey=pTagKey1,ParameterValue=${{ secrets.pTagKey1 }} ParameterKey=pTagValue1,ParameterValue=${{ secrets.pTagValue1}}
-
-  Aws-central-backup-member-account:
-    needs: validate-services
-    if: contains(needs.validate-services.outputs.services, 'cen-backup-member')
-    uses: ./.github/workflows/sharedworkflow_deploy-cloudformation-stackset.yml
-    with:
-      aws-region: us-east-1
-      stackset-instance-region: us-east-1
-      stack-set-name: central-backup-member-account
-      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.amazonaws.com/detective/detective.yaml'
-      permission-model: SELF_MANAGED
-      auto-deployment-enabled: false
-      RetainStacksOnAccountRemoval: false
-      execution-role-name: AWSControlTowerExecution
-    secrets:
-      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
-      account-ids: ${{ secrets.ACCOUNT_IDS }}
-      administration-role-arn: ${{ secrets.ADMIN_ROLE_ARN }}
-      parameter-overrides: ParameterKey=pBackupKeyAlias,ParameterValue=${{ secrets.pBackupKeyAlias}} ParameterKey=pOrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }}  ParameterKey=pCrossAccountBackupRole,ParameterValue=${{ secrets.pCrossAccountBackupRole }} ParameterKey=pMemberBackupVaultName,ParameterValue=${{ secrets.pMemberBackupVaultName }} ParameterKey=pTagKey1,ParameterValue=${{ secrets.pTagKey1 }} ParameterKey=pTagValue1,ParameterValue=${{ secrets.pTagValue1 }}
-
-  Aws-centralized-backup-account:
-    needs: validate-services
-    if: contains(needs.validate-services.outputs.services, 'centralized-backup')
-    uses: ./.github/workflows/sharedworkflow_deploy-cloudformation-stackset.yml
-    with:
-      aws-region: us-east-1
-      stackset-instance-region: us-east-1
-      stack-set-name: awsbackup-org-policy-stack
-      template-url: 'https://isocrates-control-tower-cloudformation-template.s3.amazonaws.com/detective/detective.yaml'
-      permission-model: SELF_MANAGED
-      auto-deployment-enabled: false
-      RetainStacksOnAccountRemoval: false
-      execution-role-name: AWSControlTowerExecution
-    secrets:
-      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
-      account-ids: ${{ secrets.ACCOUNT_IDS }}
-      administration-role-arn: ${{ secrets.ADMIN_ROLE_ARN }}
-      parameter-overrides: ParameterKey=pMemberAccountBackupVault,ParameterValue=${{ secrets.pMemberAccountBackupVault}} ParameterKey=pCentralBackupVaultArn,ParameterValue=${{ secrets.pCentralBackupVaultArn }}  ParameterKey=pCrossAccountBackupRole,ParameterValue=${{ secrets.pCrossAccountBackupRole }} ParameterKey=pOrgbackupAccounts,ParameterValue=${{ secrets.pOrgbackupAccounts }} ParameterKey=pBackupTagKey1,ParameterValue=${{ secrets.pBackupTagKey1 }} ParameterKey=pBackupTagKey2,ParameterValue=${{ secrets.pBackupTagKey2}} ParameterKey=pBackupTagValue1,ParameterValue=${{ secrets.pBackupTagValue1}} ParameterKey=pBackupTagValue2,ParameterValue=${{ secrets.pBackupTagValue2}} ParameterKey=pTagKey,ParameterValue=${{ secrets.pTagKey }} ParameterKey=pTagValue,ParameterValue=${{ secrets.pTagValue }}
+      parameter-overrides: ParameterKey=OrganizationId,ParameterValue=${{ secrets.ORGANIZATION_ID }} ParameterKey=HostedZoneMasterAccountId,ParameterValue=${{ secrets.MASTER_ACCOUNT_ID }} ParameterKey=S3SourceBucket,ParameterValue=${{ secrets.S3_SOURCE_BUCKET }} ParameterKey=S3Key,ParameterValue=${{ secrets.HOSTED_ZONE_MASTER_KEY }} ParameterKey=ExcludedAccounts,ParameterValue=${{ secrets.EXCLUDED_ACCOUNT_ID }}
