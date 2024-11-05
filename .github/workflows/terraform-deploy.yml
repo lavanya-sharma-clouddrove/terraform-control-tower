@@ -129,7 +129,7 @@ jobs:
       # Step 7: Check Terraform Plan result
       - name: Check Plan Result
         run: |
-          if terraform show -json | jq -e '.planned_values.root_module.resources | length > 0'; then
+          if terraform show -json tfplan | jq -e '.planned_values.root_module.resources | length > 0'; then
             echo "Plan successful! Resources will be created."
           else
             echo "Plan successful but no changes detected."
