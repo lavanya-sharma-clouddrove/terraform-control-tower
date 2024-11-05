@@ -6,6 +6,13 @@ on:
       services:
         description: 'Specify the services to deploy (access-analyzer, guard-duty, inspector, macie, securityhub, detective, config, inspection-lambda, hostedzone-master). Use a comma to separate multiple services.'
         required: true
+      confirm_apply:
+        description: 'Confirm if you want to apply the changes after planning'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
 
 jobs:
   deploy:
@@ -114,4 +121,4 @@ jobs:
       - name: Handle errors
         if: failure()
         run: |
-          echo "Terraform apply failed. Please check the logs for details."
+          echo "Terraform apply failed. Please check the logs for details." 
