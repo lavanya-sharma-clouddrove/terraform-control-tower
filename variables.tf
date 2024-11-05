@@ -551,3 +551,14 @@ variable "pCentralBackupVaultArn" {
   default     = "aws-backup/OrgPolicyCustomResourceManager.zip"
   description = "path for lambda zip file in bucket (lambda code zip file path)"
 }
+variable "pTagKey2" {
+  type        = string
+  default     = "deployedby"
+  description = "path for lambda zip file in bucket (lambda code zip file path)"
+}
+
+variable "pTagValue2" {
+  type        = string
+  default     = "stackset"
+  description = "path for lambda zip file in bucket (lambda code zip file path)"
+}
