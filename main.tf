@@ -242,7 +242,9 @@ resource "aws_cloudformation_stack" "ct_notifications_stack" {
   tags         = module.labels.tags
 }
 
-# AWS Backups
+# AWS CloudFormation StackSet and StackSet Instances for AWS Backups
+
+# Backup Member Account Role StackSet
 resource "aws_cloudformation_stack_set" "backup_member_account_role" {
   count                   = var.enable_backup_member_account_role ? 1 : 0
   name                    = "awsbackup-member-accounts-role"
@@ -264,9 +266,10 @@ resource "aws_cloudformation_stack_set_instance" "backup_member_account_role_ins
   count          = var.enable_backup_member_account_role ? 1 : 0
   account_id     = data.aws_caller_identity.current.account_id
   region         = var.region
-  stack_set_name = var.enable_backup_member_account_role ? aws_cloudformation_stack_set.backup_member_account_role[0].name : null
+  stack_set_name = aws_cloudformation_stack_set.backup_member_account_role[0].name
 }
 
+# Backup Member Account StackSet
 resource "aws_cloudformation_stack_set" "backup_member_account" {
   count                   = var.enable_backup_member_account ? 1 : 0
   name                    = "backup_member_account"
@@ -291,12 +294,13 @@ resource "aws_cloudformation_stack_set_instance" "backup_member_account_instance
   count          = var.enable_backup_member_account ? 1 : 0
   account_id     = data.aws_caller_identity.current.account_id
   region         = var.region
-  stack_set_name = var.enable_inspector ? aws_cloudformation_stack_set.backup_member_account[0].name : null
+  stack_set_name = aws_cloudformation_stack_set.backup_member_account[0].name
 }
 
+# Central Backup Account StackSet
 resource "aws_cloudformation_stack_set" "central_backup_account" {
   count                   = var.enable_central_backup_account ? 1 : 0
-  name                    = "backup_member_account"
+  name                    = "central_backup_account"
   template_url            = var.central_backup_account_file
   administration_role_arn = var.administration_role_arn
   execution_role_name     = var.execution_role_name
@@ -314,13 +318,14 @@ resource "aws_cloudformation_stack_set" "central_backup_account" {
   tags         = module.labels.tags
 }
 
-resource "aws_cloudformation_stack_set_instance" "backup_member_account_instance" {
+resource "aws_cloudformation_stack_set_instance" "central_backup_account_instance" {
   count          = var.enable_central_backup_account ? 1 : 0
   account_id     = data.aws_caller_identity.current.account_id
   region         = var.region
-  stack_set_name = var.enable_inspector ? aws_cloudformation_stack_set.central_backup_account[0].name : null
+  stack_set_name = aws_cloudformation_stack_set.central_backup_account[0].name
 }
 
+# Central Backup Organization Account StackSet
 resource "aws_cloudformation_stack_set" "central_backup_org_account" {
   count                   = var.enable_central_backup_org_account ? 1 : 0
   name                    = var.inspector_stack_name
@@ -334,11 +339,11 @@ resource "aws_cloudformation_stack_set" "central_backup_org_account" {
     pTagValue                 = var.pTagValue1
     pOrgbackupAccounts        = data.aws_caller_identity.current.account_id
     pMemberAccountBackupVault = var.pMemberBackupVaultName
-    pCentralBackupVaultArn    = var.pCentralBackupVaultArn # arn of awscentralbackupvault in security account 
+    pCentralBackupVaultArn    = var.pCentralBackupVaultArn
     pBackupTagKey1            = var.pTagKey1
-    pBackupTagKey2            = var.pBackupTagKey2
+    pBackupTagKey2            = var.pTagKey2
     pBackupTagValue1          = var.pTagValue1
-    pBackupTagValue2          = var.pBackupTagValue2
+    pBackupTagValue2          = var.pTagValue2
   }
 
   capabilities = var.capabilities
@@ -349,5 +354,5 @@ resource "aws_cloudformation_stack_set_instance" "central_backup_org_account_ins
   count          = var.enable_central_backup_org_account ? 1 : 0
   account_id     = data.aws_caller_identity.current.account_id
   region         = var.region
-  stack_set_name = var.enable_central_backup_org_account ? aws_cloudformation_stack_set.central_backup_org_account[0].name : null
+  stack_set_name = aws_cloudformation_stack_set.central_backup_org_account[0].name
 }
