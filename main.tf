@@ -219,7 +219,7 @@ resource "aws_cloudformation_stack" "child_stack" {
 
   parameters = {
     DomainName      = var.subdomain_delegation_domain_name
-    MasterAccountId = var.subdomain_delegation_master_account_id
+    MasterAccountId = var.delegated_account_id
   }
 
   capabilities = var.capabilities
