@@ -3,16 +3,109 @@ name: Deploy Terraform Stack
 on:
   workflow_dispatch:
     inputs:
-      services:
-        description: 'Specify the services to deploy (access-analyzer, guard-duty, inspector, macie, securityhub, detective, config, inspection-lambda, hostedzone-master). Use a comma to separate multiple services.'
-        required: true
-      confirm_apply:
-        description: 'Confirm if you want to apply the changes after planning'
+      enable_access_analyzer:
+        description: 'Enable Access Analyzer'
         required: true
         type: choice
         options:
           - true
           - false
+      enable_detective:
+        description: 'Enable Detective'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_guardduty:
+        description: 'Enable GuardDuty'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_inspector:
+        description: 'Enable Inspector'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_security_hub:
+        description: 'Enable Security Hub'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_config:
+        description: 'Enable Config'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_inspection_lambda:
+        description: 'Enable Inspection Lambda'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_macie:
+        description: 'Enable Macie'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_notification_webhook:
+        description: 'Enable Notification Webhook'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_subdomain_delegation:
+        description: 'Enable Subdomain Delegation'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_backup_member_account_role:
+        description: 'Enable Backup Member Account Role'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      enable_backup_member_account:
+        description: 'Enable Backup Member Account'
+        required: true
+        type: choice
+        options:
+          - true
+          - false          
+      enable_central_backup_account:
+        description: 'Enable Central Backup Account'
+        required: true
+        type: choice
+        options:
+          - true
+          - false        
+      enable_central_backup_org_account:
+        description: 'Enable Central Backup Org Account'
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+      confirm_apply:
+        description: 'Confirm Apply'
+        required: true
+        default: 'false'
+        type: boolean
 
 jobs:
   deploy:
@@ -24,46 +117,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Parse services input and set environment variables
-      - name: Set Terraform Variables Based on Services Input
-        id: set_tf_vars
+      # Step 2: Debug input values (before initializing Terraform)
+      - name: Debug Terraform Inputs
         run: |
-          # Split services input into an array
-          services="${{ github.event.inputs.services }}"
-          IFS=',' read -r -a service_array <<< "$services"
-
-          # Initialize all variables to "false"
-          echo "TF_VAR_enable_access_analyzer=false" >> $GITHUB_ENV
-          echo "TF_VAR_enable_guardduty=false" >> $GITHUB_ENV
-          echo "TF_VAR_enable_inspector=false" >> $GITHUB_ENV
-          echo "TF_VAR_enable_macie=false" >> $GITHUB_ENV
-          echo "TF_VAR_enable_security_hub=false" >> $GITHUB_ENV
-          echo "TF_VAR_enable_detective=false" >> $GITHUB_ENV
-          echo "TF_VAR_enable_config=false" >> $GITHUB_ENV
-          echo "TF_VAR_enable_inspection_lambda=false" >> $GITHUB_ENV
-          echo "TF_VAR_enable_hostedzone_master=false" >> $GITHUB_ENV
-
-          # Enable specified services
-          for service in "${service_array[@]}"; do
-            case "$service" in
-              access-analyzer) echo "TF_VAR_enable_access_analyzer=true" >> $GITHUB_ENV ;;
-              guard-duty) echo "TF_VAR_enable_guardduty=true" >> $GITHUB_ENV ;;
-              inspector) echo "TF_VAR_enable_inspector=true" >> $GITHUB_ENV ;;
-              macie) echo "TF_VAR_enable_macie=true" >> $GITHUB_ENV ;;
-              securityhub) echo "TF_VAR_enable_security_hub=true" >> $GITHUB_ENV ;;
-              detective) echo "TF_VAR_enable_detective=true" >> $GITHUB_ENV ;;
-              config) echo "TF_VAR_enable_config=true" >> $GITHUB_ENV ;;
-              inspection-lambda) echo "TF_VAR_enable_inspection_lambda=true" >> $GITHUB_ENV ;;
-              hostedzone-master) echo "TF_VAR_enable_hostedzone_master=true" >> $GITHUB_ENV ;;
-              *) echo "Unknown service: $service" ;;
-            esac
-          done
+          echo "Enable Access Analyzer: ${{ github.event.inputs.enable_access_analyzer }}"
+          echo "Enable Detective: ${{ github.event.inputs.enable_detective }}"
+          echo "Enable GuardDuty: ${{ github.event.inputs.enable_guardduty }}"
+          echo "Enable Inspector: ${{ github.event.inputs.enable_inspector }}"
+          echo "Enable Security Hub: ${{ github.event.inputs.enable_security_hub }}"
+          echo "Enable Config: ${{ github.event.inputs.enable_config }}"
+          echo "Enable Inspection Lambda: ${{ github.event.inputs.enable_inspection_lambda }}"
+          echo "Enable Macie: ${{ github.event.inputs.enable_macie }}"
+          echo "Enable Notification Webhook: ${{ github.event.inputs.enable_notification_webhook }}"
+          echo "Enable Subdomain Delegation: ${{ github.event.inputs.enable_subdomain_delegation }}"
+          echo "Enable Backup Member Account Role: ${{ github.event.inputs.enable_backup_member_account_role }}"
+          echo "Enable Backup Member Account: ${{ github.event.inputs.enable_backup_member_account }}"
+          echo "Enable Central Backup Account: ${{ github.event.inputs.enable_central_backup_account }}"
+          echo "Enable Central Backup Org Account: ${{ github.event.inputs.enable_central_backup_org_account }}"
+          echo "Region: ${{ secrets.AWS_REGION }}"
 
       # Step 3: Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.9.8
+          terraform_version: 1.9.8  # Specify your desired version
 
       # Step 4: Configure AWS credentials
       - name: Configure AWS credentials
@@ -82,21 +159,45 @@ jobs:
       - name: Terraform Plan
         id: plan
         env:
-          TF_VAR_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_enable_access_analyzer: ${{ github.event.inputs.enable_access_analyzer }}
+          TF_VAR_enable_detective: ${{ github.event.inputs.enable_detective }}
+          TF_VAR_enable_guardduty: ${{ github.event.inputs.enable_guardduty }}
+          TF_VAR_enable_inspector: ${{ github.event.inputs.enable_inspector }}
+          TF_VAR_enable_security_hub: ${{ github.event.inputs.enable_security_hub }}
+          TF_VAR_enable_config: ${{ github.event.inputs.enable_config }}
+          TF_VAR_enable_inspection_lambda: ${{ github.event.inputs.enable_inspection_lambda }}
+          TF_VAR_enable_macie: ${{ github.event.inputs.enable_macie }}
+          TF_VAR_enable_notification_webhook: ${{ github.event.inputs.enable_notification_webhook }}
+          TF_VAR_enable_subdomain_delegation: ${{ github.event.inputs.enable_subdomain_delegation }}
+          TF_VAR_enable_backup_member_account_role: ${{ github.event.inputs.enable_backup_member_account_role }}
+          TF_VAR_enable_backup_member_account: ${{ github.event.inputs.enable_backup_member_account }}
+          TF_VAR_enable_central_backup_account: ${{ github.event.inputs.enable_central_backup_account }}
+          TF_VAR_enable_central_backup_org_account: ${{ github.event.inputs.enable_central_backup_org_account }}
           TF_VAR_delegated_account_id: ${{ secrets.DELEGATED_ACCOUNT_ID }}
           TF_VAR_template_bucket_name: ${{ secrets.TEMPLATE_BUCKET_NAME }}
-          TF_VAR_role_to_assume: ${{ secrets.ROLE_TO_ASSUME }}
-          TF_VAR_access_analyzer_template_file_s3_object_url: ${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}
-          TF_VAR_detective_template_file_s3_object_url: ${{ secrets.DETECTIVE_TEMPLATE_FILE }}
-          TF_VAR_guardduty_template_file_s3_object_url: ${{ secrets.GUARDDUTY_TEMPLATE_FILE }}
-          TF_VAR_inspector_template_file_s3_object_url: ${{ secrets.INSPECTOR_TEMPLATE_FILE }}
-          TF_VAR_security_hub_template_file_s3_object_url: ${{ secrets.SECURITY_HUB_TEMPLATE_URL }}
-          TF_VAR_config_template_file_s3_object_url: ${{ secrets.CONFIG_TEMPLATE_URL }}
-          TF_VAR_inspection_lambda_template_file_s3_object_url: ${{ secrets.INSPECTION_LAMBDA_TEMPLATE_URL }}
-          TF_VAR_macie_template_file_s3_object_url: ${{ secrets.MACIE_TEMPLATE_URL }}
-          TF_VAR_notification_webhook_template_file_s3_object_url: ${{ secrets.NOTIFICATION_WEBHOOK_URL }}
+          TF_VAR_access_analyzer_template_file: ${{ secrets.ACCESS_ANALYZER_TEMPLATE_FILE }}
+          TF_VAR_detective_template_file: ${{ secrets.DETECTIVE_TEMPLATE_FILE }}
+          TF_VAR_guardduty_template_file: ${{ secrets.GUARDDUTY_TEMPLATE_FILE }}
+          TF_VAR_inspector_template_file: ${{ secrets.INSPECTOR_TEMPLATE_FILE }}
+          TF_VAR_security_hub_template_file: ${{ secrets.SECURITY_HUB_TEMPLATE_FILE }}
+          TF_VAR_config_template_file: ${{ secrets.CONFIG_TEMPLATE_URL }}
+          TF_VAR_inspection_lambda_template_file: ${{ secrets.INSPECTION_LAMBDA_TEMPLATE_FILE }}
+          TF_VAR_macie_template_file: ${{ secrets.MACIE_TEMPLATE_FILE }}
+          TF_VAR_subdomain_delegation_template_file: ${{ secrets.SUBDOMAIN_DELEGATION_TEMPLATE_FILE }}
+          TF_VAR_notification_webhook_template_file: ${{ secrets.NOTIFICATION_WEBHOOK_FILE }}
           TF_VAR_webhook_url: ${{ secrets.WEBHOOK_URL }}
-          TF_VAR_excluded_accounts: ${{ secrets.EXCLUDED_ACCOUNTS }}
+          TF_VAR_excluded_accounts: ${{ secrets.EXCLUDED_ACCOUNT_ID }}
+          TF_VAR_administration_role_arn: ${{ secrets.ADMINISTRATION_ROLE_ARN }}
+          TF_VAR_pCentralBackupVaultArn: ${{ secrets.PCENTRAL_BACKUP_VAULT_ARN }}
+          TF_VAR_subdomain_delegation_hosted_zone_id: ${{ secrets.SUBDOMAIN_DELEGATION_HOSTED_ZONE_ID }}
+          TF_VAR_subdomain_delegation_authorized_account: ${{ secrets.SUBDOMAIN_DELEGATION_AUTHORIZED_ACCOUNT }}
+          TF_VAR_subdomain_delegation_domain_name: ${{ secrets.SUBDOMAIN_DELEGATION_DOMAIN_NAME }}
+          TF_VAR_subdomain_delegation_master_account_id: ${{ secrets.SUBDOMAIN_DELEGATION_MASTER_ACCOUNT_ID }}
+          TF_VAR_backup_member_role_template_file: ${{ secrets.BACKUP_MEMBER_ROLE_TEMPLATE_FILE }}
+          TF_VAR_backup_member_account_file: ${{ secrets.BACKUP_MEMBER_ACCOUNT_FILE }}
+          TF_VAR_central_backup_account_file: ${{ secrets.CENTRAL_BACKUP_ACCOUNT_FILE }}
+          TF_VAR_central_backup_org_account_template_file: ${{ secrets.CENTRAL_BACKUP_ORG_ACCOUNT_TEMPLATE_FILE }}
+
         run: terraform plan -out=tfplan
 
       # Step 7: Check Terraform Plan result
@@ -121,4 +222,4 @@ jobs:
       - name: Handle errors
         if: failure()
         run: |
-          echo "Terraform apply failed. Please check the logs for details." 
+          echo "Terraform apply failed. Please check the logs for details."
