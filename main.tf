@@ -272,7 +272,7 @@ resource "aws_cloudformation_stack_set_instance" "backup_member_account_role_ins
 # Backup Member Account StackSet
 resource "aws_cloudformation_stack_set" "backup_member_account" {
   count                   = var.enable_backup_member_account ? 1 : 0
-  name                    = "backup_member_account"
+  name                    = "backup-member-account"
   template_url            = var.backup_member_account_file
   administration_role_arn = var.administration_role_arn
   execution_role_name     = var.execution_role_name
@@ -300,7 +300,7 @@ resource "aws_cloudformation_stack_set_instance" "backup_member_account_instance
 # Central Backup Account StackSet
 resource "aws_cloudformation_stack_set" "central_backup_account" {
   count                   = var.enable_central_backup_account ? 1 : 0
-  name                    = "central_backup_account"
+  name                    = "central-backup-account"
   template_url            = var.central_backup_account_file
   administration_role_arn = var.administration_role_arn
   execution_role_name     = var.execution_role_name
