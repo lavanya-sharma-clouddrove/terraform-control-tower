@@ -460,12 +460,6 @@ variable "enable_backup_member_account_role" {
   default     = false
 }
 
-variable "pCrossAccountBackupRole" {
-  type        = string
-  default     = "awsbackuprole"
-  description = "path for lambda zip file in bucket (lambda code zip file path)"
-}
-
 variable "pTagKey1" {
   type        = string
   default     = "deployedby"
