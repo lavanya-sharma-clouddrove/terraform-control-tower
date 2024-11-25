@@ -1,4 +1,4 @@
-name: "Deploy Terraform cloudformation stacks"
+name: "Deploy prerequisites"
 permissions: write-all
 on:
   workflow_dispatch:
